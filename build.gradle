@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id 'org.springframework.boot' version '2.2.1.RELEASE'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+bootJar {
+    archiveBaseName = 'scorekeep-api'
+    archiveVersion =  '1.0.0'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    implementation(platform("com.amazonaws:aws-xray-recorder-sdk-bom:2.4.0"))
+    implementation(platform("com.amazonaws:aws-java-sdk-bom:1.11.673"))
+    implementation(platform("com.fasterxml.jackson:jackson-bom:2.10.0"))
+    implementation(platform("org.junit:junit-bom:5.5.2"))
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.amazonaws:aws-java-sdk-dynamodb")
+    implementation("com.amazonaws:aws-java-sdk-sns")
+    implementation("com.amazonaws:aws-xray-recorder-sdk-core")
+    implementation("com.amazonaws:aws-xray-recorder-sdk-aws-sdk")
+    implementation("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-instrumentor")
+    implementation("com.amazonaws:aws-xray-recorder-sdk-metrics")
+    implementation("com.amazonaws:aws-xray-recorder-sdk-slf4j")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.amazonaws:aws-xray-opentelemetry-sdk-java:0.1.0-SNAPSHOT")
+    implementation("io.opentelemetry:opentelemetry-opentracing-shim:0.2.0-SNAPSHOT")
+    implementation("io.opentracing.contrib:opentracing-apache-httpclient:0.2.0")
+    implementation("io.opentracing:opentracing-mock:0.33.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+wrapper {
+    gradleVersion = '6.0'
+}
+
+defaultTasks 'build'
