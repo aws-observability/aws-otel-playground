@@ -16,11 +16,8 @@ bootJar {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
-    maven {
-        url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
-    }
+    mavenLocal()
 }
 
 sourceCompatibility = 1.8
@@ -40,8 +37,8 @@ dependencies {
     implementation("com.amazonaws:aws-xray-recorder-sdk-metrics")
     implementation("com.amazonaws:aws-xray-recorder-sdk-slf4j")
     implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.amazonaws:aws-xray-opentelemetry-sdk-java:0.1.0-SNAPSHOT")
-    implementation("io.opentelemetry:opentelemetry-opentracing-shim:0.2.0-SNAPSHOT")
+    implementation("com.amazonaws:aws-xray-sdk-opentelemetry:0.1.0-SNAPSHOT")
+    implementation("io.opentelemetry:opentelemetry-opentracing-shim:0.2.0")
     implementation("io.opentracing.contrib:opentracing-apache-httpclient:0.2.0")
     implementation("io.opentracing:opentracing-mock:0.33.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
