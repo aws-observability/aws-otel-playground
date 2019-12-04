@@ -84,7 +84,8 @@ public class WebConfig {
     span2.end();
     span4.end();
 
-    //Demo 3p library support
+    //Demo 3p library support - Disabled pending https://github.com/open-telemetry/opentelemetry-java/issues/671
+    /*
     opTracer.withSpan(span);
     io.opentracing.Tracer tracer = TraceShim.createTracerShim();
     GlobalTracer.registerIfAbsent(tracer);
@@ -97,6 +98,7 @@ public class WebConfig {
     } catch (IOException e) {
       logger.error("Can't execute demo HTTP call!", e);
     }
+    */
 
     span.end();
   }
