@@ -1,0 +1,15 @@
+receivers:
+  otlp:
+    endpoint: 0.0.0.0:9100
+exporters:
+  logging:
+    loglevel: info
+  awsxray:
+    local_mode: true
+service:
+  pipelines:
+    traces:
+      receivers: otlp
+      exporters:
+      - logging
+      - awsxray

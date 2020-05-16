@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  otel:
+    build:
+      context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
+    image: otel/opentelemetry-collector-contrib:master
+    command: --config /config/collector-config.yml
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+    ports:
+      - '9100:9100'
+    volumes:
+      - ./otel:/config
+      - ~/.aws:/root/.aws
+  xray:
+    image: amazon/aws-xray-daemon:3.2.0
+    command: -o
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+    ports:
+      - '2000:2000/udp'
+    volumes:
+      - ~/.aws:/root/.aws
+  app:
+    build: .
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - OTLP_ENDPOINT=otel:9100
+      - AWS_XRAY_DAEMON_ADDRESS=xray:2000
+    ports:
+      - '8080:8080'
+    volumes:
+      - ~/.aws:/root/.aws
+    depends_on:
+      - otel
+      - xray
+
