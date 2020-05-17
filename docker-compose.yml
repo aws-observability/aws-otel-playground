@@ -1,5 +1,25 @@
 version: '3.8'
 services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    command: -jar DynamoDBLocal.jar -inMemory -sharedDb
+    ports:
+      - '8000:8000'
+  dynamodb-table:
+    image: amazon/aws-cli
+    command: |
+      dynamodb create-table
+        --table-name scratch
+        --attribute-definitions AttributeName=id,AttributeType=S
+        --key-schema AttributeName=id,KeyType=HASH
+        --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+        --endpoint-url http://dynamodb:8000
+    environment:
+      - AWS_ACCESS_KEY_ID=dummy
+      - AWS_SECRET_ACCESS_KEY=dummy
+      - AWS_REGION=dummy
+    depends_on:
+      - dynamodb
   otel:
     build:
       context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
@@ -33,6 +53,7 @@ services:
       - AWS_REGION
       - OTLP_ENDPOINT=otel:9100
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
+      - DYNAMODB_ENDPOINT=dynamodb:8000
     ports:
       - '8080:8080'
     volumes:
@@ -40,4 +61,5 @@ services:
     depends_on:
       - otel
       - xray
+      - dynamodb-table
 

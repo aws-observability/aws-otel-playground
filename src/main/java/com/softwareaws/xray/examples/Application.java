@@ -16,10 +16,12 @@
 package com.softwareaws.xray.examples;
 
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
+import java.net.URI;
 import javax.servlet.Filter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @SpringBootApplication
@@ -27,7 +29,13 @@ public class Application {
 
     @Bean
     public DynamoDbClient dynamoDb() {
-        return DynamoDbClient.create();
+        String dynamodbEndpoint = System.getenv("DYNAMODB_ENDPOINT");
+        if (dynamodbEndpoint == null) {
+            return DynamoDbClient.create();
+        }
+        return DynamoDbClient.builder()
+                             .endpointOverride(URI.create("http://" + dynamodbEndpoint))
+                             .build();
     }
 
     @Bean
