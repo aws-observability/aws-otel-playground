@@ -13,6 +13,20 @@
  * permissions and limitations under the License.
  */
 
-include(":api")
-include(":backend")
-include(":frontend")
+syntax = "proto3";
+
+package hello;
+
+option java_package = "com.softwareaws.xray.examples.hello";
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloResponse {
+    string greeting = 2;
+}
+
+service HelloService {
+    rpc Hello(HelloRequest) returns (HelloResponse);
+}

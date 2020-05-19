@@ -13,6 +13,18 @@
  * permissions and limitations under the License.
  */
 
-include(":api")
-include(":backend")
-include(":frontend")
+plugins {
+    application
+    java
+}
+
+application {
+    mainClassName = "com.softwareaws.xray.examples.hello.Application"
+}
+
+dependencies {
+    implementation(project(":api"))
+
+    implementation("io.grpc:grpc-netty-shaded")
+    implementation("org.apache.logging.log4j:log4j-core")
+}

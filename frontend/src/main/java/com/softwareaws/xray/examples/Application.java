@@ -16,8 +16,12 @@
 package com.softwareaws.xray.examples;
 
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
+import com.amazonaws.xray.proxies.apache.http.HttpClientBuilder;
+import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
+import io.grpc.ManagedChannelBuilder;
 import java.net.URI;
 import javax.servlet.Filter;
+import org.apache.http.client.HttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -39,8 +43,25 @@ public class Application {
     }
 
     @Bean
+    public HelloServiceGrpc.HelloServiceBlockingStub helloService() {
+        String helloServiceEndpoint = System.getenv("HELLO_SERVICE_ENDPOINT");
+        if (helloServiceEndpoint == null) {
+            helloServiceEndpoint = "localhost:8081";
+        }
+        return HelloServiceGrpc.newBlockingStub(ManagedChannelBuilder
+                                                    .forTarget(helloServiceEndpoint)
+                                                    .usePlaintext()
+                                                    .build());
+    }
+
+    @Bean
     public Filter servletFilter() {
         return new AWSXRayServletFilter("OTTest");
+    }
+
+    @Bean
+    public HttpClient httpClient() {
+        return HttpClientBuilder.create().build();
     }
 
     public static void main(String[] args) throws Exception {

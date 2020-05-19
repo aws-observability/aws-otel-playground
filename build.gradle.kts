@@ -14,33 +14,28 @@
  */
 
 plugins {
-    application
     java
 }
 
-application {
-    mainClassName = "com.softwareaws.xray.examples.Application"
-}
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
+    plugins.withId("java") {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
+        }
 
-repositories {
-    jcenter()
-    mavenCentral()
-    mavenLocal()
-}
-
-dependencies {
-    implementation(platform("com.amazonaws:aws-xray-recorder-sdk-bom:2.5.0"))
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:2.2.7.RELEASE"))
-    implementation(platform("software.amazon.awssdk:bom:2.13.17"))
-
-    implementation("com.amazonaws:aws-xray-recorder-sdk-core")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("software.amazon.awssdk:dynamodb")
-
-    runtimeOnly("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-v2-instrumentor")
+        dependencies {
+            implementation(platform("com.amazonaws:aws-xray-recorder-sdk-bom:2.5.0"))
+            implementation(platform("io.grpc:grpc-bom:1.29.0"))
+            implementation(platform("org.apache.logging.log4j:log4j-bom:2.13.3"))
+            implementation(platform("org.springframework.boot:spring-boot-dependencies:2.2.7.RELEASE"))
+            implementation(platform("software.amazon.awssdk:bom:2.13.17"))
+        }
+    }
 }
