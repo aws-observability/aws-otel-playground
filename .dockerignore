@@ -1,5 +1,9 @@
 **/Dockerfile
 docker-compose.yml
+otel/
+.dockerignore
+README.md
+**/.DS_Store
 
 # Below copied from .gitignore
 

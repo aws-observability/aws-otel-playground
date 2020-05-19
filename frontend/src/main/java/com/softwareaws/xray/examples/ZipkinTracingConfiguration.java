@@ -13,32 +13,51 @@
  * permissions and limitations under the License.
  */
 
-package com.softwareaws.xray.examples.hello;
+package com.softwareaws.xray.examples;
 
 import brave.Tracing;
 import brave.grpc.GrpcTracing;
 import brave.handler.MutableSpan;
 import brave.handler.SpanHandler;
+import brave.http.HttpTracing;
+import brave.instrumentation.awsv2.AwsSdkTracing;
 import brave.propagation.B3Propagation;
 import brave.propagation.TraceContext;
 import brave.sampler.Sampler;
-import io.grpc.ServerBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import brave.spring.webmvc.DelegatingTracingFilter;
+import brave.spring.webmvc.SpanCustomizingAsyncHandlerInterceptor;
+import javax.servlet.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import zipkin2.reporter.brave.AsyncZipkinSpanHandler;
 import zipkin2.reporter.brave.ZipkinSpanHandler;
 import zipkin2.reporter.okhttp3.OkHttpSender;
 import zipkin2.reporter.xray_udp.XRayUDPReporter;
 
-public class Application {
+@Configuration
+@Import(SpanCustomizingAsyncHandlerInterceptor.class)
+public class ZipkinTracingConfiguration implements WebMvcConfigurer {
 
-    private static final Logger logger = LogManager.getLogger();
+    @Bean
+    public SpanHandler xraySpanHandler() {
+        return ZipkinSpanHandler.create(XRayUDPReporter.create());
+    }
 
-    public static void main(String[] args) throws Exception {
+    @Bean
+    public SpanHandler otelSpanHandler() {
         String zipkinEndpoint = System.getenv("ZIPKIN_ENDPOINT");
         if (zipkinEndpoint == null) {
             zipkinEndpoint = "localhost:9411";
         }
+        return AsyncZipkinSpanHandler.create(OkHttpSender.create("http://" + zipkinEndpoint));
+    }
+
+    @Bean
+    public Tracing tracing() {
         var tracing =
             Tracing.newBuilder()
                    .sampler(Sampler.ALWAYS_SAMPLE)
@@ -56,7 +75,7 @@ public class Application {
                            return true;
                        }
                    })
-                   .addSpanHandler(ZipkinSpanHandler.create(XRayUDPReporter.create()))
+                   .addSpanHandler(xraySpanHandler())
                    .addSpanHandler(new SpanHandler() {
                        @Override
                        public boolean end(TraceContext context, MutableSpan span, Cause cause) {
@@ -65,20 +84,37 @@ public class Application {
                            return true;
                        }
                    })
-                   .addSpanHandler(AsyncZipkinSpanHandler.create(OkHttpSender.create("http://" + zipkinEndpoint)))
-                   .build();
-        var grpcTracing = GrpcTracing.create(tracing);
+                   .addSpanHandler(otelSpanHandler());
+        return tracing.build();
+    }
 
-        var server = ServerBuilder.forPort(8081)
-                                  .addService(new HelloService())
-                                  .intercept(grpcTracing.newServerInterceptor())
-                                  .build();
+    @Bean
+    public HttpTracing httpTracing(Tracing tracing) {
+        return HttpTracing.create(tracing);
+    }
 
-        server.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
+    @Bean
+    public GrpcTracing grpcTracing(Tracing tracing) {
+        return GrpcTracing.create(tracing);
+    }
 
-        logger.info("Server started at port 8081.");
+    @Bean
+    public Filter zipkinFilter() {
+        return new DelegatingTracingFilter();
+    }
 
-        server.awaitTermination();
+    @Bean
+    public AwsSdkTracing awsSdkTracing(HttpTracing httpTracing) {
+        var sdkTracing = AwsSdkTracing.create(httpTracing);
+        ZipkinHackTracingExecutionInterceptor.setInterceptor(sdkTracing.executionInterceptor());
+        return sdkTracing;
+    }
+
+    @Autowired
+    SpanCustomizingAsyncHandlerInterceptor interceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor);
     }
 }

@@ -15,8 +15,13 @@
 
 package com.softwareaws.xray.examples;
 
+import brave.grpc.GrpcTracing;
+import brave.http.HttpTracing;
+import brave.httpclient.TracingHttpClientBuilder;
+import brave.instrumentation.awsv2.AwsSdkTracing;
+import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
-import com.amazonaws.xray.proxies.apache.http.HttpClientBuilder;
+import com.amazonaws.xray.proxies.apache.http.TracedHttpClient;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
 import java.net.URI;
@@ -25,25 +30,23 @@ import org.apache.http.client.HttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @SpringBootApplication
 public class Application {
 
     @Bean
-    public DynamoDbClient dynamoDb() {
+    public DynamoDbClient dynamoDb(AwsSdkTracing unused) {
+        var builder = DynamoDbClient.builder();
         String dynamodbEndpoint = System.getenv("DYNAMODB_ENDPOINT");
-        if (dynamodbEndpoint == null) {
-            return DynamoDbClient.create();
+        if (dynamodbEndpoint != null) {
+            builder.endpointOverride(URI.create("http://" + dynamodbEndpoint));
         }
-        return DynamoDbClient.builder()
-                             .endpointOverride(URI.create("http://" + dynamodbEndpoint))
-                             .build();
+        return builder.build();
     }
 
     @Bean
-    public HelloServiceGrpc.HelloServiceBlockingStub helloService() {
+    public HelloServiceGrpc.HelloServiceBlockingStub helloService(GrpcTracing grpcTracing) {
         String helloServiceEndpoint = System.getenv("HELLO_SERVICE_ENDPOINT");
         if (helloServiceEndpoint == null) {
             helloServiceEndpoint = "localhost:8081";
@@ -51,6 +54,7 @@ public class Application {
         return HelloServiceGrpc.newBlockingStub(ManagedChannelBuilder
                                                     .forTarget(helloServiceEndpoint)
                                                     .usePlaintext()
+                                                    .intercept(grpcTracing.newClientInterceptor())
                                                     .build());
     }
 
@@ -60,8 +64,8 @@ public class Application {
     }
 
     @Bean
-    public HttpClient httpClient() {
-        return HttpClientBuilder.create().build();
+    public HttpClient httpClient(HttpTracing httpTracing) {
+        return new TracedHttpClient(TracingHttpClientBuilder.create(httpTracing).build(), AWSXRay.getGlobalRecorder());
     }
 
     public static void main(String[] args) throws Exception {

@@ -8,6 +8,7 @@ RUN apt-get -y update && apt-get -y install curl
 ADD *gradle* /src/
 ADD gradle /src/gradle/
 ADD api/build.gradle.kts /src/api/
+ADD backend/build.gradle.kts /src/backend/
 ADD frontend/build.gradle.kts /src/frontend/
 RUN ./gradlew dependencies
 

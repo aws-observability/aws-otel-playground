@@ -21,8 +21,8 @@ services:
     depends_on:
       - dynamodb
   otel:
-    #build:
-      #context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
+    build:
+      context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
     image: otel/opentelemetry-collector-contrib:master
     command: --config /config/collector-config.yml
     environment:
@@ -31,6 +31,7 @@ services:
       - AWS_REGION
     ports:
       - '9100:9100'
+      - '9411:9411'
     volumes:
       - ./otel:/config
       - ~/.aws:/root/.aws
@@ -51,6 +52,7 @@ services:
       dockerfile: backend/Dockerfile
     environment:
       - OTLP_ENDPOINT=otel:9100
+      - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
     ports:
       - '8081:8081'
@@ -64,6 +66,7 @@ services:
       - AWS_REGION
       - HELLO_SERVICE_ENDPOINT=backend:8081
       - OTLP_ENDPOINT=otel:9100
+      - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
     ports:

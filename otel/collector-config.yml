@@ -1,6 +1,8 @@
 receivers:
   otlp:
     endpoint: 0.0.0.0:9100
+  zipkin:
+    endpoint: 0.0.0.0:9411
 exporters:
   logging:
     loglevel: info
@@ -9,7 +11,9 @@ exporters:
 service:
   pipelines:
     traces:
-      receivers: otlp
+      receivers:
+      - otlp
+      - zipkin
       exporters:
       - logging
       - awsxray

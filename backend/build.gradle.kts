@@ -26,5 +26,8 @@ dependencies {
     implementation(project(":api"))
 
     implementation("io.grpc:grpc-netty-shaded")
+    implementation("io.zipkin.aws:zipkin-reporter-xray-udp:0.21.1")
+    implementation("io.zipkin.brave:brave-instrumentation-grpc")
+    implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
     implementation("org.apache.logging.log4j:log4j-core")
 }
