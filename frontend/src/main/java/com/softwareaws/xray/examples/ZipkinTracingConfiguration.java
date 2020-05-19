@@ -79,6 +79,8 @@ public class ZipkinTracingConfiguration implements WebMvcConfigurer {
                    .addSpanHandler(new SpanHandler() {
                        @Override
                        public boolean end(TraceContext context, MutableSpan span, Cause cause) {
+                           // Need to make sure trace ID is different so traces show up separately on console. Hacky, but works
+                           // for what we need.
                            span.traceId(span.traceId().substring(0, 31) + (span.traceId().endsWith("0") ? "1" : "0"));
                            span.tag("tracer", "zipkin-otel");
                            return true;
