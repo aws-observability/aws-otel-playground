@@ -14,5 +14,6 @@
  */
 
 include(":api")
+include(":awsexporter")
 include(":backend")
 include(":frontend")

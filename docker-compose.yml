@@ -23,8 +23,8 @@ services:
     depends_on:
       - dynamodb
   otel:
-    build:
-      context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
+    #build:
+    #  context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
     image: otel/opentelemetry-collector-contrib:master
     command: --config /config/collector-config.yml
     environment:

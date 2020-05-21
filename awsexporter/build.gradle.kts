@@ -13,23 +13,34 @@
  * permissions and limitations under the License.
  */
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    application
     java
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-application {
-    mainClassName = "com.softwareaws.xray.examples.hello.Application"
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
 }
 
 dependencies {
-    implementation(project(":api"))
+    compileOnly("io.opentelemetry:opentelemetry-sdk-contrib-auto-config:0.4.1")
 
+    implementation("io.opentelemetry:opentelemetry-exporters-otlp:0.4.1") {
+        exclude("io.opentelemetry", "opentelemetry-sdk")
+    }
+    implementation("io.grpc:grpc-api")
     implementation("io.grpc:grpc-netty-shaded")
-    implementation("io.zipkin.aws:zipkin-reporter-xray-udp:0.21.1")
-    implementation("io.zipkin.brave:brave-instrumentation-grpc")
-    implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
-    implementation("org.apache.logging.log4j:log4j-core")
+}
 
-    runtimeOnly("io.opentelemetry:opentelemetry-sdk:0.4.1")
+tasks {
+    named<ShadowJar>("shadowJar") {
+        archiveClassifier.set("")
+    }
+}
+
+tasks.jar {
+    enabled = false
 }

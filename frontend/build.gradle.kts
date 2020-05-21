@@ -44,4 +44,5 @@ dependencies {
     implementation("software.amazon.awssdk:dynamodb")
 
     runtimeOnly("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-v2-instrumentor")
+    runtimeOnly("io.opentelemetry:opentelemetry-sdk:0.4.1")
 }
