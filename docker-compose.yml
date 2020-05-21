@@ -7,13 +7,15 @@ services:
       - '8000:8000'
   dynamodb-table:
     image: amazon/aws-cli
+    entrypoint: bash
+    # Wait a few seconds for dynamodb-local to start before creating
     command: |
-      dynamodb create-table
-        --table-name scratch
-        --attribute-definitions AttributeName=id,AttributeType=S
-        --key-schema AttributeName=id,KeyType=HASH
-        --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
-        --endpoint-url http://dynamodb:8000
+      -c "sleep 5 && aws dynamodb create-table \
+        --table-name scratch \
+        --attribute-definitions AttributeName=id,AttributeType=S \
+        --key-schema AttributeName=id,KeyType=HASH \
+        --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+        --endpoint-url http://dynamodb:8000"
     environment:
       - AWS_ACCESS_KEY_ID=dummy
       - AWS_SECRET_ACCESS_KEY=dummy

@@ -19,6 +19,8 @@ Make sure Docker is installed and run
 
 `$ docker-compose up`
 
+Access `http://localhost:8080/`.
+
 Then visit the X-Ray console, for example [here](https://ap-northeast-1.console.aws.amazon.com/xray/home?region=ap-northeast-1#/traces)
 and you should see multiple traces corresponding to the request you made.
 
