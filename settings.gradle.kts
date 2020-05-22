@@ -14,6 +14,7 @@
  */
 
 include(":api")
+include(":awsagentprovider")
 include(":awsexporter")
 include(":backend")
 include(":frontend")

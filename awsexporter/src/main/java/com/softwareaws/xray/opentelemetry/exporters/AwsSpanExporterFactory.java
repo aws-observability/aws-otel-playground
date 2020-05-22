@@ -26,13 +26,13 @@ public class AwsSpanExporterFactory implements SpanExporterFactory {
 
     @Override
     public SpanExporter fromConfig(Config config) {
+        System.out.println("AwsSpanExporterFactory");
         // Copied from https://github.com/open-telemetry/opentelemetry-auto-instr-java/blob/master/auto-exporters/otlp/src/main/java/io/opentelemetry/auto/exporters/otlp/OtlpSpanExporterFactory.java
         // because not published to Maven.
         final String otlpEndpoint = config.getString(OTLP_ENDPOINT, "");
         if (otlpEndpoint.isEmpty()) {
             throw new IllegalStateException("ota.exporter.otlp.endpoint is required");
         }
-        System.out.println("OTLP_ENDPOINT:" + otlpEndpoint);
         SpanExporter delegate =
             OtlpGrpcSpanExporter.newBuilder()
                                 .setChannel(ManagedChannelBuilder.forTarget(otlpEndpoint).usePlaintext().build())

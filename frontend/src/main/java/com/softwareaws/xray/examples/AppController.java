@@ -22,14 +22,13 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -94,7 +93,7 @@ public class AppController {
 
     @GetMapping("/self")
     @ResponseBody
-    public String self() {
+    public String self(@RequestHeader Map<String, String> headers) {
         String count1 = dynamoDb.getItem(GetItemRequest.builder()
                                                        .tableName("scratch")
                                                        .key(Map.of("id", AttributeValue.builder()
@@ -115,6 +114,6 @@ public class AppController {
                                 .get("count")
                                 .n();
 
-        return "Read back " + count1 + "," + count2;
+        return "Read back " + count1 + "," + count2 + "\nGot headers:" + headers;
     }
 }
