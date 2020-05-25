@@ -34,10 +34,11 @@ public class AwsTraceProvider implements TraceProvider {
             populator.populate(resourceAttributes);
         }
 
-        TracerSdkProvider provider =  TracerSdkProvider.builder()
-                                                       .setIdsGenerator(AwsXrayIdsGenerator.INSTANCE)
-                                                       .setResource(Resource.create(resourceAttributes))
-                                                       .build();
-        return provider;
+        TracerSdkProvider.Builder provider =  TracerSdkProvider.builder()
+                                                               .setIdsGenerator(AwsXrayIdsGenerator.INSTANCE);
+        if (!resourceAttributes.isEmpty()) {
+            provider.setResource(Resource.create(resourceAttributes));
+        }
+        return provider.build();
     }
 }
