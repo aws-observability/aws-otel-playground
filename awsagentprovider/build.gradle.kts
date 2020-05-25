@@ -25,6 +25,9 @@ java {
 
 dependencies {
     implementation("io.opentelemetry:opentelemetry-sdk:0.4.1")
+    implementation("org.slf4j:slf4j-api:1.7.30")
+
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 }
 
 tasks {

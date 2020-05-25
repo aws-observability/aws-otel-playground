@@ -5,6 +5,11 @@ services:
     command: -jar DynamoDBLocal.jar -inMemory -sharedDb
     ports:
       - '8000:8000'
+  imds:
+    image: amazon/amazon-ec2-metadata-mock:v0.9.3
+    command: --hostname 0.0.0.0
+    ports:
+      - '1338:1338'
   dynamodb-table:
     image: amazon/aws-cli
     entrypoint: bash
@@ -54,10 +59,15 @@ services:
       dockerfile: backend/Dockerfile
     environment:
       - OTLP_ENDPOINT=otel:9100
+      - IMDS_ENDPOINT=imds:1338
       - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
     ports:
       - '8081:8081'
+    depends_on:
+      - otel
+      - xray
+      - imds
   frontend:
     build:
       context: .
@@ -67,6 +77,7 @@ services:
       - AWS_SECRET_ACCESS_KEY
       - AWS_REGION
       - HELLO_SERVICE_ENDPOINT=backend:8081
+      - IMDS_ENDPOINT=imds:1338
       - OTLP_ENDPOINT=otel:9100
       - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
@@ -80,4 +91,5 @@ services:
       - otel
       - xray
       - dynamodb-table
+      - imds
 

@@ -32,6 +32,7 @@ allprojects {
 
         dependencies {
             implementation(platform("com.amazonaws:aws-xray-recorder-sdk-bom:2.5.0"))
+            implementation(platform("com.fasterxml.jackson:jackson-bom:2.11.0"))
             implementation(platform("io.grpc:grpc-bom:1.29.0"))
             implementation(platform("io.zipkin.brave:brave-bom:5.12.3"))
             implementation(platform("io.zipkin.reporter2:zipkin-reporter-bom:2.15.0"))

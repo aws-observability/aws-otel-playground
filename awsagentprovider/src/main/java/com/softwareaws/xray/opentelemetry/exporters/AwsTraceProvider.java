@@ -15,16 +15,28 @@
 
 package com.softwareaws.xray.opentelemetry.exporters;
 
+import com.softwareaws.xray.opentelemetry.exporters.resources.ResourcePopulator;
+import io.opentelemetry.common.AttributeValue;
+import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.TracerSdkProvider;
 import io.opentelemetry.trace.TracerProvider;
 import io.opentelemetry.trace.spi.TraceProvider;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class AwsTraceProvider implements TraceProvider {
     @Override
     public TracerProvider create() {
         System.out.println("AwsTraceProvider");
+
+        Map<String, AttributeValue> resourceAttributes = new LinkedHashMap<>();
+        for (ResourcePopulator populator : ResourcePopulator.getAll()) {
+            populator.populate(resourceAttributes);
+        }
+
         TracerSdkProvider provider =  TracerSdkProvider.builder()
                                                        .setIdsGenerator(AwsXrayIdsGenerator.INSTANCE)
+                                                       .setResource(Resource.create(resourceAttributes))
                                                        .build();
         return provider;
     }
