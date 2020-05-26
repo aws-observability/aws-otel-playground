@@ -8,6 +8,7 @@ RUN apt-get -y update && apt-get -y install curl
 ADD *gradle* /src/
 ADD gradle /src/gradle/
 ADD api/build.gradle.kts /src/api/
+ADD appdb/build.gradle.kts /src/appdb/
 ADD awsagentprovider/build.gradle.kts /src/awsagentprovider/
 ADD awsexporter/build.gradle.kts /src/awsexporter/
 ADD backend/build.gradle.kts /src/backend/

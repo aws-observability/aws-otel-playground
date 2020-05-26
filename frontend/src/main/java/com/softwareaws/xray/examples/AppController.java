@@ -15,16 +15,21 @@
 
 package com.softwareaws.xray.examples;
 
+import static com.softwareaws.xray.examples.appdb.tables.Planet.PLANET;
+
+import com.softwareaws.xray.examples.appdb.tables.pojos.Planet;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import com.softwareaws.xray.examples.hello.HelloServiceOuterClass;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,14 +48,17 @@ public class AppController {
     private final DynamoDbClient dynamoDb;
     private final HelloServiceGrpc.HelloServiceBlockingStub helloService;
     private final HttpClient httpClient;
+    private final DSLContext appdb;
 
     @Autowired
     public AppController(DynamoDbClient dynamoDb,
                          HelloServiceGrpc.HelloServiceBlockingStub helloService,
-                         HttpClient httpClient) {
+                         HttpClient httpClient,
+                         DSLContext appdb) {
         this.dynamoDb = dynamoDb;
         this.helloService = helloService;
         this.httpClient = httpClient;
+        this.appdb = appdb;
     }
 
     @GetMapping("/")
@@ -78,7 +86,9 @@ public class AppController {
                                                                                                               .setName("X-Ray")
                                                                                                               .build());
 
-
+        var planets = appdb.selectFrom(PLANET)
+             .fetchInto(Planet.class);
+        String randomPlanet = planets.get(ThreadLocalRandom.current().nextInt(planets.size())).getName();
 
         final String selfResponseContent;
         try {
@@ -88,7 +98,7 @@ public class AppController {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }
 
-        return selfResponseContent + "\n" + response.getGreeting();
+        return selfResponseContent + "\n" + response.getGreeting() + "\n" + randomPlanet;
     }
 
     @GetMapping("/self")

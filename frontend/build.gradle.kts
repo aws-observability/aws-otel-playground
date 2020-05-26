@@ -28,6 +28,7 @@ application {
 
 dependencies {
     implementation(project(":api"))
+    implementation(project(":appdb"))
 
     implementation("com.amazonaws:aws-xray-recorder-sdk-apache-http")
     implementation("com.amazonaws:aws-xray-recorder-sdk-core")
@@ -38,10 +39,22 @@ dependencies {
     implementation("io.zipkin.brave:brave-instrumentation-httpclient")
     implementation("io.zipkin.brave:brave-instrumentation-spring-webmvc")
     implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
+    implementation("mysql:mysql-connector-java:8.0.20")
     implementation("org.apache.httpcomponents:httpclient:4.5.12")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-jooq") {
+        // X-Ray SDK only supports Tomcat connection pool so use it for comparison. OpenTelemetry users should stick
+        // to HikariCP for a real app.
+        exclude("com.zaxxer", "HikariCP")
+    }
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("software.amazon.awssdk:apache-client")
     implementation("software.amazon.awssdk:dynamodb")
+
+    runtimeOnly("com.amazonaws:aws-xray-recorder-sdk-sql-mysql")
+    runtimeOnly("io.zipkin.brave:brave-instrumentation-mysql8")
+    runtimeOnly("org.apache.tomcat:tomcat-jdbc")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.6.0")
 
     runtimeOnly("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-v2-instrumentor")
     runtimeOnly("io.opentelemetry:opentelemetry-sdk:0.4.1")

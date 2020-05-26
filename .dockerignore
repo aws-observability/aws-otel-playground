@@ -4,6 +4,7 @@ otel/
 .dockerignore
 README.md
 **/.DS_Store
+scripts/
 
 # Below copied from .gitignore
 

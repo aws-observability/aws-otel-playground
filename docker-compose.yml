@@ -27,9 +27,19 @@ services:
       - AWS_REGION=dummy
     depends_on:
       - dynamodb
+  mysqldb:
+    image: mysql:5.7
+    environment:
+      # Don't ever use such a simple password in prod! This is only for local testing.
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appdb
+    ports:
+      - '3306:3306'
+    volumes:
+    - ./scripts/db:/docker-entrypoint-initdb.d
   otel:
-    build:
-      context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
+    #build:
+    #  context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
     image: otel/opentelemetry-collector-contrib:master
     command: --config /config/collector-config.yml
     environment:
@@ -65,9 +75,10 @@ services:
     ports:
       - '8081:8081'
     depends_on:
+      - imds
+      - mysqldb
       - otel
       - xray
-      - imds
   frontend:
     build:
       context: .
@@ -82,14 +93,16 @@ services:
       - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
+      - FRONTEND_OPTS=-Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor"
     ports:
       - '8080:8080'
     volumes:
       - ~/.aws:/root/.aws
     depends_on:
       - backend
-      - otel
-      - xray
       - dynamodb-table
       - imds
+      - mysqldb
+      - otel
+      - xray
 
