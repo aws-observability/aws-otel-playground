@@ -15,6 +15,7 @@
 
 package com.softwareaws.xray.examples;
 
+import brave.Tracer;
 import brave.Tracing;
 import brave.grpc.GrpcTracing;
 import brave.handler.MutableSpan;
@@ -88,6 +89,11 @@ public class ZipkinTracingConfiguration implements WebMvcConfigurer {
                    })
                    .addSpanHandler(otelSpanHandler());
         return tracing.build();
+    }
+
+    @Bean
+    public Tracer tracer(Tracing tracing) {
+        return tracing.tracer();
     }
 
     @Bean

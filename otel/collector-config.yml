@@ -8,6 +8,11 @@ exporters:
     loglevel: info
   awsxray:
     local_mode: true
+  zipkin:
+    url: "http://zipkin-server:9411/api/v2/spans"
+    format: proto
+  jaeger:
+    endpoint: jaeger-server:14250
 service:
   pipelines:
     traces:
@@ -17,3 +22,5 @@ service:
       exporters:
       - logging
       - awsxray
+      - zipkin
+      - jaeger

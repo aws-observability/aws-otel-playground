@@ -37,6 +37,16 @@ services:
       - '3306:3306'
     volumes:
     - ./scripts/db:/docker-entrypoint-initdb.d
+  jaeger-server:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "14268"
+      - "14250"
+  zipkin-server:
+    image: openzipkin/zipkin-slim
+    ports:
+      - '9412:9411'
   otel:
     #build:
     #  context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
@@ -52,6 +62,9 @@ services:
     volumes:
       - ./otel:/config
       - ~/.aws:/root/.aws
+    depends_on:
+      - zipkin-server
+      - jaeger-server
   xray:
     image: amazon/aws-xray-daemon:3.2.0
     command: -o

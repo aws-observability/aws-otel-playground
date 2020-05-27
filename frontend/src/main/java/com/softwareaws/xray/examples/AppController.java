@@ -17,6 +17,7 @@ package com.softwareaws.xray.examples;
 
 import static com.softwareaws.xray.examples.appdb.tables.Planet.PLANET;
 
+import brave.Tracer;
 import com.softwareaws.xray.examples.appdb.tables.pojos.Planet;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import com.softwareaws.xray.examples.hello.HelloServiceOuterClass;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.HttpResponse;
@@ -45,20 +47,25 @@ public class AppController {
 
     private static final AtomicInteger COUNTER = new AtomicInteger();
 
+    private static final String AWS_REGION = Objects.requireNonNullElse(System.getenv("AWS_REGION"), "insert-region");
+
     private final DynamoDbClient dynamoDb;
     private final HelloServiceGrpc.HelloServiceBlockingStub helloService;
     private final HttpClient httpClient;
     private final DSLContext appdb;
+    private final Tracer tracer;
 
     @Autowired
     public AppController(DynamoDbClient dynamoDb,
                          HelloServiceGrpc.HelloServiceBlockingStub helloService,
                          HttpClient httpClient,
-                         DSLContext appdb) {
+                         DSLContext appdb,
+                         Tracer tracer) {
         this.dynamoDb = dynamoDb;
         this.helloService = helloService;
         this.httpClient = httpClient;
         this.appdb = appdb;
+        this.tracer = tracer;
     }
 
     @GetMapping("/")
@@ -98,7 +105,12 @@ public class AppController {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }
 
-        return selfResponseContent + "\n" + response.getGreeting() + "\n" + randomPlanet;
+        return "<html><body>"
+               + selfResponseContent + "<br>" + response.getGreeting() + "<br>" + randomPlanet + "<br>" + "Find the traces:<br>"
+               + "<a target=\"_blank\" href=\"https://" + AWS_REGION + ".console.aws.amazon.com/xray/home?region=" + AWS_REGION + "#/traces?timeRange=PT1M\">XRay</a><br>"
+               + "<a target=\"_blank\" href=\"http://localhost:9412?limit=10&lookback=900000\">zipkin</a><br>"
+               + "<a target=\"_blank\" href=\"http://localhost:16686?limit=20&lookback=1h&maxDuration&minDuration&service=OTTest\">jaeger</a>"
+               + "</body></html>";
     }
 
     @GetMapping("/self")
@@ -124,6 +136,19 @@ public class AppController {
                                 .get("count")
                                 .n();
 
-        return "Read back " + count1 + "," + count2 + "\nGot headers:" + headers;
+        return "Read back " + count1 + "," + count2 + "<br>Got headers:" + headers;
+    }
+
+    private static String xrayUrl(String traceId) {
+        return "https://" + AWS_REGION + ".console.aws.amazon.com/xray/home?region=" + AWS_REGION + "#/traces/1-" + traceId.substring(0, 8)
+            + "-" + traceId.substring(8);
+    }
+
+    private static String zipkinUrl(String traceId) {
+        return "http://localhost:9412/zipkin/traces/" + traceId;
+    }
+
+    private static String jaegerUrl(String traceId) {
+        return "http://localhost:9412/zipkin/traces/" + traceId;
     }
 }
