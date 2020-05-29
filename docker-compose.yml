@@ -48,9 +48,9 @@ services:
     ports:
       - '9412:9411'
   otel:
-    build:
-      context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
-    image: otel/opentelemetry-collector-contrib:master
+    #build:
+    #  context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
+    image: otel/opentelemetry-collector-contrib-dev
     command: --config /config/collector-config.yml
     environment:
       - AWS_ACCESS_KEY_ID
