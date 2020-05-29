@@ -15,7 +15,8 @@ services:
     entrypoint: bash
     # Wait a few seconds for dynamodb-local to start before creating
     command: |
-      -c "sleep 5 && aws dynamodb create-table \
+      -c "curl --retry 10 --retry-delay 5 --retry-max-time 100 --retry-connrefused http://dynamodb:8000 > /dev/null && \
+        aws dynamodb create-table \
         --table-name scratch \
         --attribute-definitions AttributeName=id,AttributeType=S \
         --key-schema AttributeName=id,KeyType=HASH \

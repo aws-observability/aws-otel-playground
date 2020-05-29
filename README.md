@@ -28,3 +28,5 @@ The app uses normal [AWS credentials](https://docs.aws.amazon.com/sdk-for-java/v
 If you have trouble running after using the CLI to run `aws configure`, try setting the environment variables as described
 on that page, in particular `AWS_REGION`.
 
+Note that the `dynamodb-table` is only to create the table once, so it is normal for it to exist after creating the table.
+
