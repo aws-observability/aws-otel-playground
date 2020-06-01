@@ -109,7 +109,7 @@ services:
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - FRONTEND_OPTS=-Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor"
     ports:
-      - '9080:8080'
+      - '9080:9080'
     volumes:
       - ~/.aws:/root/.aws
     depends_on:

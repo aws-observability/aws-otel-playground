@@ -17,16 +17,15 @@ package com.softwareaws.xray.examples;
 
 import brave.grpc.GrpcTracing;
 import brave.http.HttpTracing;
-import brave.httpclient.TracingHttpClientBuilder;
 import brave.instrumentation.awsv2.AwsSdkTracing;
-import com.amazonaws.xray.AWSXRay;
+import brave.okhttp3.TracingCallFactory;
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
-import com.amazonaws.xray.proxies.apache.http.TracedHttpClient;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
 import java.net.URI;
 import javax.servlet.Filter;
-import org.apache.http.client.HttpClient;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -64,8 +63,8 @@ public class Application {
     }
 
     @Bean
-    public HttpClient httpClient(HttpTracing httpTracing) {
-        return new TracedHttpClient(TracingHttpClientBuilder.create(httpTracing).build(), AWSXRay.getGlobalRecorder());
+    public Call.Factory httpClient(HttpTracing httpTracing) {
+        return TracingCallFactory.create(httpTracing, new OkHttpClient());
     }
 
     public static void main(String[] args) throws Exception {

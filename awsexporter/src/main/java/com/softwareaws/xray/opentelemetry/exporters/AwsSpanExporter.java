@@ -15,29 +15,16 @@
 
 package com.softwareaws.xray.opentelemetry.exporters;
 
-import io.opentelemetry.common.AttributeValue;
-import io.opentelemetry.sdk.resources.Resource;
-import io.opentelemetry.sdk.resources.ResourceConstants;
 import io.opentelemetry.sdk.trace.data.SpanData;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
+import io.opentelemetry.trace.Span;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import javax.annotation.Nullable;
 
 final class AwsSpanExporter implements SpanExporter {
-
-    private static final Resource DUMMY_RESOURCE;
-
-    static {
-        Map<String, AttributeValue> labels = new HashMap<>();
-        labels.put(ResourceConstants.CLOUD_PROVIDER, AttributeValue.stringAttributeValue("aws"));
-        labels.put(ResourceConstants.HOST_ID, AttributeValue.stringAttributeValue("instance-12345"));
-        labels.put(ResourceConstants.CLOUD_ZONE, AttributeValue.stringAttributeValue("ap-northeast1-a"));
-        DUMMY_RESOURCE = Resource.create(labels);
-    }
 
     private final SpanExporter delegate;
 
@@ -49,7 +36,10 @@ final class AwsSpanExporter implements SpanExporter {
     public ResultCode export(Collection<SpanData> spans) {
         List<SpanData> decorated = new ArrayList<>(spans.size());
         for (SpanData span : spans) {
-            decorated.add(decorate(span));
+            SpanData decoratedSpan = decorate(span);
+            if (decoratedSpan != null) {
+                decorated.add(decoratedSpan);
+            }
         }
         return delegate.export(Collections.unmodifiableList(decorated));
     }
@@ -64,11 +54,20 @@ final class AwsSpanExporter implements SpanExporter {
         delegate.shutdown();
     }
 
+    @Nullable
     private static SpanData decorate(SpanData span) {
-        if (!span.getResource().equals(Resource.getEmpty())) {
-            return span;
+        String instrumentation = span.getInstrumentationLibraryInfo().getName();
+        if (instrumentation.equals("io.opentelemetry.auto.aws-sdk-2.2")) {
+            return toBuilder(span).setKind(Span.Kind.CLIENT).build();
+        } else if (instrumentation.equals("io.opentelemetry.auto.apache-httpclient-4.0")) {
+            // Suppress all Apache HTTP calls for now until we have a story for interaction between RPC + transport.
+            // https://github.com/open-telemetry/opentelemetry-java-instrumentation/issues/440
+            return null;
         }
-        // TODO(anuraaga): If this ends up as the official method for customizing spans, really need to add SpanData.toBuilder
+        return span;
+    }
+
+    private static SpanData.Builder toBuilder(SpanData span) {
         return SpanData.newBuilder()
                        .setTraceId(span.getTraceId())
                        .setSpanId(span.getSpanId())
@@ -89,7 +88,6 @@ final class AwsSpanExporter implements SpanExporter {
                        .setTotalRecordedEvents(span.getTotalRecordedEvents())
                        .setTotalRecordedLinks(span.getTotalRecordedLinks())
                        .setTotalAttributeCount(span.getTotalAttributeCount())
-                       .setResource(DUMMY_RESOURCE)
-                       .build();
+                       .setResource(span.getResource());
     }
 }

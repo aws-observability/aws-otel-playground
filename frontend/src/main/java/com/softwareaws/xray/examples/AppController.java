@@ -23,14 +23,13 @@ import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import com.softwareaws.xray.examples.hello.HelloServiceOuterClass;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,14 +50,14 @@ public class AppController {
 
     private final DynamoDbClient dynamoDb;
     private final HelloServiceGrpc.HelloServiceBlockingStub helloService;
-    private final HttpClient httpClient;
+    private final Call.Factory httpClient;
     private final DSLContext appdb;
     private final Tracer tracer;
 
     @Autowired
     public AppController(DynamoDbClient dynamoDb,
                          HelloServiceGrpc.HelloServiceBlockingStub helloService,
-                         HttpClient httpClient,
+                         Call.Factory httpClient,
                          DSLContext appdb,
                          Tracer tracer) {
         this.dynamoDb = dynamoDb;
@@ -98,9 +97,9 @@ public class AppController {
         String randomPlanet = planets.get(ThreadLocalRandom.current().nextInt(planets.size())).getName();
 
         final String selfResponseContent;
-        try {
-            HttpResponse selfResponse = httpClient.execute(new HttpGet("http://localhost:8080/self"));
-            selfResponseContent = new String(selfResponse.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
+        try (Response selfResponse = httpClient.newCall(
+            new Request.Builder().url("http://localhost:9080/self").build()).execute()) {
+            selfResponseContent = selfResponse.body().string();
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }

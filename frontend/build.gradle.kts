@@ -36,7 +36,7 @@ dependencies {
     implementation("io.zipkin.aws:brave-instrumentation-aws-java-sdk-v2-core:0.21.1")
     implementation("io.zipkin.aws:zipkin-reporter-xray-udp:0.21.1")
     implementation("io.zipkin.brave:brave-instrumentation-grpc")
-    implementation("io.zipkin.brave:brave-instrumentation-httpclient")
+    implementation("io.zipkin.brave:brave-instrumentation-okhttp3")
     implementation("io.zipkin.brave:brave-instrumentation-spring-webmvc")
     implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
     implementation("mysql:mysql-connector-java:8.0.20")
@@ -48,6 +48,7 @@ dependencies {
         exclude("com.zaxxer", "HikariCP")
     }
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.squareup.okhttp3:okhttp:4.7.2")
     implementation("software.amazon.awssdk:apache-client")
     implementation("software.amazon.awssdk:dynamodb")
 
