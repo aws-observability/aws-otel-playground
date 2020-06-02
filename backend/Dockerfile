@@ -44,5 +44,6 @@ ENV OTLP_ENDPOINT localhost:9100
 CMD JAVA_OPTS="-javaagent:/app/otel/opentelemetry-auto.jar \
   -Xbootclasspath/a:/app/otel/opentelemetry-auto-awsagentprovider.jar \
   -Dio.opentelemetry.auto.shaded.io.opentelemetry.trace.spi.TraceProvider=com.softwareaws.xray.opentelemetry.exporters.AwsTraceProvider \
+  -Dota.aws.service.name=OTTestBackend \
   -Dota.exporter.jar=/app/otel/opentelemetry-auto-exporters-awsexporter.jar \
   -Dota.exporter.otlp.endpoint=\$OTLP_ENDPOINT" /app/bin/backend

@@ -15,9 +15,12 @@
 
 package com.softwareaws.xray.opentelemetry.exporters;
 
+import static io.opentelemetry.common.AttributeValue.stringAttributeValue;
+
 import com.softwareaws.xray.opentelemetry.exporters.resources.ResourcePopulator;
 import io.opentelemetry.common.AttributeValue;
 import io.opentelemetry.sdk.resources.Resource;
+import io.opentelemetry.sdk.resources.ResourceConstants;
 import io.opentelemetry.sdk.trace.TracerSdkProvider;
 import io.opentelemetry.trace.TracerProvider;
 import io.opentelemetry.trace.spi.TraceProvider;
@@ -25,20 +28,23 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AwsTraceProvider implements TraceProvider {
+
+    private static final String LOCAL_SERVICE_NAME = System.getProperty("ota.aws.service.name", "XrayInstrumentedService");
+
     @Override
     public TracerProvider create() {
         System.out.println("AwsTraceProvider");
 
         Map<String, AttributeValue> resourceAttributes = new LinkedHashMap<>();
+        resourceAttributes.put(ResourceConstants.SERVICE_NAME, stringAttributeValue(LOCAL_SERVICE_NAME));
+
         for (ResourcePopulator populator : ResourcePopulator.getAll()) {
             populator.populate(resourceAttributes);
         }
 
-        TracerSdkProvider.Builder provider =  TracerSdkProvider.builder()
-                                                               .setIdsGenerator(AwsXrayIdsGenerator.INSTANCE);
-        if (!resourceAttributes.isEmpty()) {
-            provider.setResource(Resource.create(resourceAttributes));
-        }
-        return provider.build();
+        return TracerSdkProvider.builder()
+                                .setIdsGenerator(AwsXrayIdsGenerator.INSTANCE)
+                                .setResource(Resource.create(resourceAttributes))
+                                .build();
     }
 }
