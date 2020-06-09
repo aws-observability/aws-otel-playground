@@ -113,9 +113,7 @@ public class ZipkinTracingConfiguration implements WebMvcConfigurer {
 
     @Bean
     public AwsSdkTracing awsSdkTracing(HttpTracing httpTracing) {
-        var sdkTracing = AwsSdkTracing.create(httpTracing);
-        ZipkinHackTracingExecutionInterceptor.setInterceptor(sdkTracing.executionInterceptor());
-        return sdkTracing;
+        return AwsSdkTracing.create(httpTracing);
     }
 
     @Autowired

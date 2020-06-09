@@ -17,7 +17,6 @@ package com.softwareaws.xray.opentelemetry.exporters;
 
 import io.opentelemetry.sdk.trace.data.SpanData;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
-import io.opentelemetry.trace.Span;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,38 +55,6 @@ final class AwsSpanExporter implements SpanExporter {
 
     @Nullable
     private static SpanData decorate(SpanData span) {
-        String instrumentation = span.getInstrumentationLibraryInfo().getName();
-        if (instrumentation.equals("io.opentelemetry.auto.aws-sdk-2.2")) {
-            return toBuilder(span).setKind(Span.Kind.CLIENT).build();
-        } else if (instrumentation.equals("io.opentelemetry.auto.apache-httpclient-4.0")) {
-            // Suppress all Apache HTTP calls for now until we have a story for interaction between RPC + transport.
-            // https://github.com/open-telemetry/opentelemetry-java-instrumentation/issues/440
-            return null;
-        }
         return span;
-    }
-
-    private static SpanData.Builder toBuilder(SpanData span) {
-        return SpanData.newBuilder()
-                       .setTraceId(span.getTraceId())
-                       .setSpanId(span.getSpanId())
-                       .setTraceFlags(span.getTraceFlags())
-                       .setTraceState(span.getTraceState())
-                       .setParentSpanId(span.getParentSpanId())
-                       .setInstrumentationLibraryInfo(span.getInstrumentationLibraryInfo())
-                       .setName(span.getName())
-                       .setStartEpochNanos(span.getStartEpochNanos())
-                       .setEndEpochNanos(span.getEndEpochNanos())
-                       .setAttributes(span.getAttributes())
-                       .setTimedEvents(span.getTimedEvents())
-                       .setStatus(span.getStatus())
-                       .setKind(span.getKind())
-                       .setLinks(span.getLinks())
-                       .setHasRemoteParent(span.getHasRemoteParent())
-                       .setHasEnded(span.getHasEnded())
-                       .setTotalRecordedEvents(span.getTotalRecordedEvents())
-                       .setTotalRecordedLinks(span.getTotalRecordedLinks())
-                       .setTotalAttributeCount(span.getTotalAttributeCount())
-                       .setResource(span.getResource());
     }
 }

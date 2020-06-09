@@ -17,9 +17,8 @@ RUN ./gradlew dependencies
 
 RUN mkdir -p /dist/otel
 
-RUN curl -Lo /dist/otel/opentelemetry-auto.jar https://github.com/open-telemetry/opentelemetry-auto-instr-java/releases/download/v0.3.0/opentelemetry-auto-0.3.0.jar
-RUN curl -Lo /dist/otel/opentelemetry-auto-exporters-logging.jar https://github.com/open-telemetry/opentelemetry-auto-instr-java/releases/download/v0.3.0/opentelemetry-auto-exporters-logging-0.3.0.jar
-RUN curl -Lo /dist/otel/opentelemetry-auto-exporters-otlp.jar https://github.com/open-telemetry/opentelemetry-auto-instr-java/releases/download/v0.3.0/opentelemetry-auto-exporters-otlp-0.3.0.jar
+RUN curl -Lo /dist/otel/opentelemetry-auto.jar https://10197-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-0.4.0-SNAPSHOT.jar
+RUN curl -Lo /dist/otel/opentelemetry-auto-exporters-otlp.jar https://10197-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-exporters-otlp-0.4.0-SNAPSHOT.jar
 
 ADD awsagentprovider /src/awsagentprovider/
 ADD awsexporter /src/awsexporter/
@@ -42,8 +41,8 @@ WORKDIR /app
 ENV OTLP_ENDPOINT localhost:9100
 
 CMD JAVA_OPTS="-javaagent:/app/otel/opentelemetry-auto.jar \
-  -Xbootclasspath/a:/app/otel/opentelemetry-auto-awsagentprovider.jar \
-  -Dio.opentelemetry.auto.shaded.io.opentelemetry.trace.spi.TraceProvider=com.softwareaws.xray.opentelemetry.exporters.AwsTraceProvider \
+  -Dota.initializer.jar=/app/otel/opentelemetry-auto-awsagentprovider.jar \
+  -Dio.opentelemetry.auto.shaded.io.opentelemetry.trace.spi.TracerProviderFactory=com.softwareaws.xray.opentelemetry.exporters.AwsTraceProvider \
   -Dota.aws.service.name=OTTestBackend \
-  -Dota.exporter.jar=/app/otel/opentelemetry-auto-exporters-awsexporter.jar \
+  -Dota.exporter.jar=/app/otel/opentelemetry-auto-exporters-otlp.jar \
   -Dota.exporter.otlp.endpoint=\$OTLP_ENDPOINT" /app/bin/backend

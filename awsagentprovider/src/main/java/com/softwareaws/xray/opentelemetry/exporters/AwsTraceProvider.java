@@ -23,11 +23,11 @@ import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.resources.ResourceConstants;
 import io.opentelemetry.sdk.trace.TracerSdkProvider;
 import io.opentelemetry.trace.TracerProvider;
-import io.opentelemetry.trace.spi.TraceProvider;
+import io.opentelemetry.trace.spi.TracerProviderFactory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class AwsTraceProvider implements TraceProvider {
+public class AwsTraceProvider implements TracerProviderFactory {
 
     private static final String LOCAL_SERVICE_NAME = System.getProperty("ota.aws.service.name", "XrayInstrumentedService");
 
