@@ -31,11 +31,12 @@ dependencies {
     implementation(project(":appdb"))
 
     // Allows IntelliJ debugger stepping into the agent.
-    compileOnly(files("${rootProject.projectDir}/.gradle/otel/opentelemetry-auto-0.4.0-SNAPSHOT.jar"))
+    // compileOnly(files("${rootProject.projectDir}/.gradle/otel/opentelemetry-auto-0.4.0-SNAPSHOT.jar"))
 
     implementation("com.amazonaws:aws-xray-recorder-sdk-apache-http")
     implementation("com.amazonaws:aws-xray-recorder-sdk-core")
     implementation("io.grpc:grpc-netty-shaded")
+    implementation("io.opentelemetry:opentelemetry-sdk:0.5.0")
     implementation("io.zipkin.aws:brave-instrumentation-aws-java-sdk-v2-core:0.21.1")
     implementation("io.zipkin.aws:zipkin-reporter-xray-udp:0.21.1")
     implementation("io.zipkin.brave:brave-instrumentation-httpclient")
@@ -62,5 +63,4 @@ dependencies {
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.6.0")
 
     runtimeOnly("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-v2-instrumentor")
-    runtimeOnly("io.opentelemetry:opentelemetry-sdk:0.5.0")
 }

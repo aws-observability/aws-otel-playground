@@ -21,6 +21,7 @@ import brave.Tracer;
 import com.softwareaws.xray.examples.appdb.tables.pojos.Planet;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import com.softwareaws.xray.examples.hello.HelloServiceOuterClass;
+import io.opentelemetry.trace.TracingContextUtils;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
@@ -109,10 +110,13 @@ public class AppController {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }
 
+        String traceId = TracingContextUtils.getCurrentSpan().getContext().getTraceId().toLowerBase16();
         return "<html><body>"
                + selfResponseContent + "<br>" + response.getGreeting() + "<br>" + randomPlanet + "<br>" + "Find the traces:<br>"
-               + "<a target=\"_blank\" href=\"https://" + AWS_REGION + ".console.aws.amazon.com/xray/home?region=" + AWS_REGION + "#/traces?timeRange=PT1M\">XRay</a><br>"
-               + "<a target=\"_blank\" href=\"http://localhost:9412?limit=10&lookback=900000\">zipkin</a><br>"
+               + "<a target=\"_blank\" href=\"https://" + AWS_REGION + ".console.aws.amazon.com/xray/home?region=" + AWS_REGION + "#/traces?timeRange=PT1M\">XRay</a>"
+               + "<a target=\"_blank\" href=\"" + xrayUrl(traceId) + "\">[Trace]</a><br>"
+               + "<a target=\"_blank\" href=\"http://localhost:9412?limit=10&lookback=900000\">zipkin</a>"
+               + "<a target=\"_blank\" href=\"" + zipkinUrl(traceId) + "\">[Trace]</a><br>"
                + "<a target=\"_blank\" href=\"http://localhost:16686?limit=20&lookback=1h&maxDuration&minDuration&service=OTTest\">jaeger</a>"
                + "</body></html>";
     }
