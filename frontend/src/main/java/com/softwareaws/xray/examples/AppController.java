@@ -21,6 +21,7 @@ import brave.Tracer;
 import com.softwareaws.xray.examples.appdb.tables.pojos.Planet;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import com.softwareaws.xray.examples.hello.HelloServiceOuterClass;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.opentelemetry.trace.TracingContextUtils;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -56,6 +57,7 @@ public class AppController {
     private final Call.Factory httpClient;
     private final HttpClient apacheClient;
     private final DSLContext appdb;
+    private final StatefulRedisConnection<String, String> redis;
     private final Tracer tracer;
 
     @Autowired
@@ -64,12 +66,14 @@ public class AppController {
                          Call.Factory httpClient,
                          HttpClient apacheClient,
                          DSLContext appdb,
+                         StatefulRedisConnection<String, String> redis,
                          Tracer tracer) {
         this.dynamoDb = dynamoDb;
         this.helloService = helloService;
         this.httpClient = httpClient;
         this.apacheClient = apacheClient;
         this.appdb = appdb;
+        this.redis = redis;
         this.tracer = tracer;
     }
 
@@ -94,6 +98,9 @@ public class AppController {
                                                                          .build()))
                                        .build());
 
+        redis.sync().get("redis1");
+        redis.sync().get("redis2");
+
         HelloServiceOuterClass.HelloResponse response = helloService.hello(HelloServiceOuterClass.HelloRequest.newBuilder()
                                                                                                               .setName("X-Ray")
                                                                                                               .build());
@@ -109,6 +116,9 @@ public class AppController {
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }
+
+        redis.sync().set("redis1", "value1");
+        redis.sync().set("redis2", "value2");
 
         String traceId = TracingContextUtils.getCurrentSpan().getContext().getTraceId().toLowerBase16();
         return "<html><body>"

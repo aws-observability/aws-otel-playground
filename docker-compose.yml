@@ -38,6 +38,10 @@ services:
       - '3306:3306'
     volumes:
     - ./scripts/db:/docker-entrypoint-initdb.d
+  redis:
+    image: redis:6
+    ports:
+      - '6379:6379'
   jaeger-server:
     image: jaegertracing/all-in-one:latest
     ports:
@@ -117,6 +121,7 @@ services:
       - dynamodb-table
       - imds
       - mysqldb
+      - redis
       - otel
       - xray
 

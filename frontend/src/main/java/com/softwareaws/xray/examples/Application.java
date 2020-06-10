@@ -15,6 +15,7 @@
 
 package com.softwareaws.xray.examples;
 
+import brave.Tracing;
 import brave.grpc.GrpcTracing;
 import brave.http.HttpTracing;
 import brave.httpclient.TracingHttpClientBuilder;
@@ -25,6 +26,10 @@ import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
 import com.amazonaws.xray.proxies.apache.http.TracedHttpClient;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.tracing.BraveTracing;
 import java.net.URI;
 import javax.servlet.Filter;
 import okhttp3.Call;
@@ -76,6 +81,19 @@ public class Application {
     @Bean
     public HttpClient apacheClient(HttpTracing httpTracing) {
         return new TracedHttpClient(TracingHttpClientBuilder.create(httpTracing).build(), AWSXRay.getGlobalRecorder());
+    }
+
+    @Bean
+    public StatefulRedisConnection<String, String> redisClient(Tracing tracing) {
+        String redisEndpoint = System.getenv("REDIS_ENDPOINT");
+        if (redisEndpoint == null) {
+            redisEndpoint = "localhost:6379";
+        }
+        return RedisClient.create(ClientResources.builder()
+                                                 .tracing(BraveTracing.create(tracing))
+                                                 .build(),
+                                  "redis://" + redisEndpoint)
+                          .connect();
     }
 
     public static void main(String[] args) throws Exception {
