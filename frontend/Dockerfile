@@ -17,8 +17,8 @@ RUN ./gradlew dependencies
 
 RUN mkdir -p /dist/otel
 
-RUN curl -Lo /dist/otel/opentelemetry-auto.jar https://10197-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-0.4.0-SNAPSHOT.jar
-RUN curl -Lo /dist/otel/opentelemetry-auto-exporters-otlp.jar https://10197-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-exporters-otlp-0.4.0-SNAPSHOT.jar
+RUN curl -Lo /dist/otel/opentelemetry-auto.jar https://10332-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-0.4.0-SNAPSHOT.jar
+RUN curl -Lo /dist/otel/opentelemetry-auto-exporters-otlp.jar https://10332-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-exporters-otlp-0.4.0-SNAPSHOT.jar
 
 ADD awsagentprovider /src/awsagentprovider/
 ADD awsexporter /src/awsexporter/
