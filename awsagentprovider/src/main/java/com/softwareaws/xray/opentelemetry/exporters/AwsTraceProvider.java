@@ -18,24 +18,18 @@ package com.softwareaws.xray.opentelemetry.exporters;
 import static io.opentelemetry.common.AttributeValue.stringAttributeValue;
 
 import com.softwareaws.xray.opentelemetry.exporters.resources.ResourcePopulator;
-import io.grpc.ManagedChannelBuilder;
 import io.opentelemetry.common.AttributeValue;
-import io.opentelemetry.exporters.otlp.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.resources.ResourceConstants;
 import io.opentelemetry.sdk.trace.TracerSdkProvider;
-import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
 import io.opentelemetry.trace.TracerProvider;
 import io.opentelemetry.trace.spi.TracerProviderFactory;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class AwsTraceProvider implements TracerProviderFactory {
 
     private static final String LOCAL_SERVICE_NAME = System.getProperty("ota.aws.service.name", "XrayInstrumentedService");
-
-    private static final AtomicInteger COUNTER = new AtomicInteger();
 
     private static final TracerSdkProvider TRACER_PROVIDER;
     static {
@@ -54,26 +48,6 @@ public class AwsTraceProvider implements TracerProviderFactory {
     @Override
     public TracerProvider create() {
         System.out.println("AwsTraceProvider");
-        new Throwable().printStackTrace();
-
-        // Work around registering span processor reinitializing and creating another exporter until we can use agent SPI
-        // https://github.com/open-telemetry/opentelemetry-java-instrumentation/pull/491
-        if (COUNTER.getAndIncrement() == 0) {
-            String otlpEndpoint = System.getProperty("ota.exporter.otlp.endpoint");
-            if (otlpEndpoint == null || otlpEndpoint.isEmpty()) {
-                throw new IllegalStateException("ota.exporter.otlp.endpoint is required");
-            }
-            OtlpGrpcSpanExporter exporter = OtlpGrpcSpanExporter.newBuilder()
-                                                                .setChannel(ManagedChannelBuilder.forTarget(otlpEndpoint).usePlaintext().build())
-                                                                .build();
-            TRACER_PROVIDER.addSpanProcessor(
-                BatchSpanProcessor
-                    .newBuilder(exporter)
-                    .readEnvironmentVariables()
-                    .readSystemProperties()
-                    .build());
-        }
-
         return TRACER_PROVIDER;
     }
 }

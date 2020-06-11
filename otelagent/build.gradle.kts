@@ -24,7 +24,8 @@ java {
 }
 
 dependencies {
-    implementation("io.opentelemetry.auto:opentelemetry-auto:0.4.0-20200610.060016-1")
+    implementation("io.opentelemetry.auto:opentelemetry-auto:0.4.0-20200611.055646-2:no-exporters")
+    implementation("io.opentelemetry.auto:opentelemetry-auto-exporters-otlp:0.4.0-20200611.055646-2")
 }
 
 val agentProviderShadowJarTask = project(":awsagentprovider").tasks.named<Jar>("shadowJar")
