@@ -13,19 +13,18 @@ ADD awsagentprovider/build.gradle.kts /src/awsagentprovider/
 ADD awsexporter/build.gradle.kts /src/awsexporter/
 ADD backend/build.gradle.kts /src/backend/
 ADD frontend/build.gradle.kts /src/frontend/
+ADD otelagent/build.gradle.kts /src/otelagent/
 RUN ./gradlew dependencies
 
 RUN mkdir -p /dist/otel
 
-RUN curl -Lo /dist/otel/opentelemetry-auto.jar https://10332-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-0.4.0-SNAPSHOT.jar
-RUN curl -Lo /dist/otel/opentelemetry-auto-exporters-otlp.jar https://10332-210933087-gh.circle-artifacts.com/0/libs/opentelemetry-auto-exporters-otlp-0.4.0-SNAPSHOT.jar
-
 ADD awsagentprovider /src/awsagentprovider/
-ADD awsexporter /src/awsexporter/
+ADD otelagent /src/otelagent/
 
-RUN ./gradlew :awsagentprovider:shadowJar :awsexporter:shadowJar
-RUN cp /src/awsagentprovider/build/libs/awsagentprovider.jar /dist/otel/opentelemetry-auto-awsagentprovider.jar
-RUN cp /src/awsexporter/build/libs/awsexporter.jar /dist/otel/opentelemetry-auto-exporters-awsexporter.jar
+RUN ./gradlew :otelagent:shadowJar
+
+RUN mkdir -p /dist/otel
+RUN cp /src/otelagent/build/libs/otelagent.jar /dist/otel/opentelemetry-auto-aws.jar
 
 ADD . /src
 RUN ./gradlew :backend:build
@@ -40,9 +39,6 @@ WORKDIR /app
 
 ENV OTLP_ENDPOINT localhost:9100
 
-CMD JAVA_OPTS="-javaagent:/app/otel/opentelemetry-auto.jar \
-  -Dota.initializer.jar=/app/otel/opentelemetry-auto-awsagentprovider.jar \
-  -Dio.opentelemetry.auto.shaded.io.opentelemetry.trace.spi.TracerProviderFactory=com.softwareaws.xray.opentelemetry.exporters.AwsTraceProvider \
+CMD JAVA_OPTS="-javaagent:/app/otel/opentelemetry-auto-aws.jar \
   -Dota.aws.service.name=OTTestBackend \
-  -Dota.exporter.jar=/app/otel/opentelemetry-auto-exporters-otlp.jar \
   -Dota.exporter.otlp.endpoint=\$OTLP_ENDPOINT" /app/bin/backend

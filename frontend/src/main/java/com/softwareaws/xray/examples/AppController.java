@@ -57,7 +57,7 @@ public class AppController {
     private final Call.Factory httpClient;
     private final HttpClient apacheClient;
     private final DSLContext appdb;
-    private final StatefulRedisConnection<String, String> redis;
+    private final StatefulRedisConnection<String, String> fooCache;
     private final Tracer tracer;
 
     @Autowired
@@ -66,14 +66,14 @@ public class AppController {
                          Call.Factory httpClient,
                          HttpClient apacheClient,
                          DSLContext appdb,
-                         StatefulRedisConnection<String, String> redis,
+                         StatefulRedisConnection<String, String> fooCache,
                          Tracer tracer) {
         this.dynamoDb = dynamoDb;
         this.helloService = helloService;
         this.httpClient = httpClient;
         this.apacheClient = apacheClient;
         this.appdb = appdb;
-        this.redis = redis;
+        this.fooCache = fooCache;
         this.tracer = tracer;
     }
 
@@ -98,8 +98,8 @@ public class AppController {
                                                                          .build()))
                                        .build());
 
-        redis.sync().get("redis1");
-        redis.sync().get("redis2");
+        fooCache.sync().get("redis1");
+        fooCache.sync().get("redis2");
 
         HelloServiceOuterClass.HelloResponse response = helloService.hello(HelloServiceOuterClass.HelloRequest.newBuilder()
                                                                                                               .setName("X-Ray")
@@ -117,8 +117,8 @@ public class AppController {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }
 
-        redis.sync().set("redis1", "value1");
-        redis.sync().set("redis2", "value2");
+        fooCache.sync().set("redis1", "value1");
+        fooCache.sync().set("redis2", "value2");
 
         String traceId = TracingContextUtils.getCurrentSpan().getContext().getTraceId().toLowerBase16();
         return "<html><body>"

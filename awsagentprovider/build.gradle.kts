@@ -25,7 +25,10 @@ java {
 
 dependencies {
     compileOnly("io.opentelemetry:opentelemetry-sdk:0.5.0")
-    implementation("org.slf4j:slf4j-api:1.7.30")
+    compileOnly("io.opentelemetry.auto:opentelemetry-auto:0.4.0-20200610.060016-1")
+    compileOnly("org.slf4j:slf4j-api:1.7.30")
+
+    implementation("io.opentelemetry.auto:opentelemetry-auto-exporters-otlp:0.4.0-20200610.060016-1")
 
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 }

@@ -30,9 +30,6 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":appdb"))
 
-    // Allows IntelliJ debugger stepping into the agent.
-    // compileOnly(files("${rootProject.projectDir}/.gradle/otel/opentelemetry-auto-0.4.0-SNAPSHOT.jar"))
-
     implementation("com.amazonaws:aws-xray-recorder-sdk-apache-http")
     implementation("com.amazonaws:aws-xray-recorder-sdk-core")
     implementation("io.grpc:grpc-netty-shaded")

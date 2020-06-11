@@ -84,7 +84,7 @@ public class Application {
     }
 
     @Bean
-    public StatefulRedisConnection<String, String> redisClient(Tracing tracing) {
+    public StatefulRedisConnection<String, String> fooCache(Tracing tracing) {
         String redisEndpoint = System.getenv("REDIS_ENDPOINT");
         if (redisEndpoint == null) {
             redisEndpoint = "localhost:6379";

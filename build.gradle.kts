@@ -22,6 +22,10 @@ allprojects {
         jcenter()
         mavenCentral()
         mavenLocal()
+
+        maven {
+            setUrl("https://oss.jfrog.org/libs-snapshot")
+        }
     }
 
     plugins.withId("java") {
