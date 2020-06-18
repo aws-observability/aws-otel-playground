@@ -31,5 +31,5 @@ dependencies {
     implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
     implementation("org.apache.logging.log4j:log4j-core")
 
-    runtimeOnly("io.opentelemetry:opentelemetry-sdk:0.5.0")
+    runtimeOnly("io.opentelemetry:opentelemetry-sdk")
 }

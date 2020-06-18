@@ -12,6 +12,7 @@ ADD appdb/build.gradle.kts /src/appdb/
 ADD awsagentprovider/build.gradle.kts /src/awsagentprovider/
 ADD awsexporter/build.gradle.kts /src/awsexporter/
 ADD backend/build.gradle.kts /src/backend/
+ADD dependencyManagement/build.gradle.kts /src/dependencyManagement/
 ADD frontend/build.gradle.kts /src/frontend/
 ADD otelagent/build.gradle.kts /src/otelagent/
 RUN ./gradlew dependencies

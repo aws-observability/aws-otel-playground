@@ -34,7 +34,7 @@ dependencies {
     implementation("com.amazonaws:aws-xray-recorder-sdk-core")
     implementation("io.grpc:grpc-netty-shaded")
     implementation("io.lettuce:lettuce-core:5.3.1.RELEASE")
-    implementation("io.opentelemetry:opentelemetry-sdk:0.5.0")
+    implementation("io.opentelemetry:opentelemetry-sdk")
     implementation("io.zipkin.aws:brave-instrumentation-aws-java-sdk-v2-core:0.21.1")
     implementation("io.zipkin.aws:zipkin-reporter-xray-udp:0.21.1")
     implementation("io.zipkin.brave:brave-instrumentation-httpclient")
