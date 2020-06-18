@@ -24,13 +24,18 @@ import brave.okhttp3.TracingCallFactory;
 import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
 import com.amazonaws.xray.proxies.apache.http.TracedHttpClient;
+import com.amazonaws.xray.strategy.IgnoreErrorContextMissingStrategy;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.tracing.BraveTracing;
+import io.opentelemetry.OpenTelemetry;
+import io.opentelemetry.context.propagation.DefaultContextPropagators;
+import io.opentelemetry.trace.propagation.HttpTraceContext;
 import java.net.URI;
+import java.util.Optional;
 import javax.servlet.Filter;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -42,6 +47,8 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @SpringBootApplication
 public class Application {
+
+    private static final boolean ENABLE_XRAY_SDK = "true".equals(System.getenv("ENABLE_XRAY_SDK"));
 
     @Bean
     public DynamoDbClient dynamoDb(AwsSdkTracing awsSdkTracing) {
@@ -69,8 +76,12 @@ public class Application {
     }
 
     @Bean
-    public Filter servletFilter() {
-        return new AWSXRayServletFilter("OTTest");
+    public Optional<Filter> servletFilter() {
+        if (ENABLE_XRAY_SDK) {
+            return Optional.of(new AWSXRayServletFilter("OTTest"));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Bean
@@ -97,6 +108,12 @@ public class Application {
     }
 
     public static void main(String[] args) throws Exception {
+        if (ENABLE_XRAY_SDK) {
+            // Can't use X-Ray propagation with OpenTelemetry if X-Ray SDK is enabled or they would collide.
+            OpenTelemetry.setPropagators(DefaultContextPropagators.builder().addHttpTextFormat(new HttpTraceContext()).build());
+        } else {
+            AWSXRay.getGlobalRecorder().setContextMissingStrategy(new IgnoreErrorContextMissingStrategy());
+        }
         SpringApplication.run(Application.class, args);
     }
 }
