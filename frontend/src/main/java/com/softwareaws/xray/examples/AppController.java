@@ -111,6 +111,13 @@ public class AppController {
             // Ignore. It should be in our trace though!
         }
 
+        try {
+            apacheClient.execute(new HttpGet("https://4cz4hdh1wb.execute-api.us-west-2.amazonaws.com/ot-test/"))
+                        .getEntity().getContent().readAllBytes();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not fetch from lambda API", e);
+        }
+
         var planets = appdb.selectFrom(PLANET)
              .fetchInto(Planet.class);
         String randomPlanet = planets.get(ThreadLocalRandom.current().nextInt(planets.size())).getName();
