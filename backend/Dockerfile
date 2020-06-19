@@ -41,5 +41,5 @@ WORKDIR /app
 ENV OTLP_ENDPOINT localhost:9100
 
 CMD JAVA_OPTS="-javaagent:/app/otel/opentelemetry-auto-aws.jar \
-  -Dota.aws.service.name=OTTestBackend \
+  -Dota.aws.service.name=HelloService \
   -Dota.exporter.otlp.endpoint=\$OTLP_ENDPOINT" /app/bin/backend
