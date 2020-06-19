@@ -27,6 +27,16 @@ message HelloResponse {
     string greeting = 2;
 }
 
+message FailRequest {
+    string reason = 1;
+}
+
+message FailResponse {
+    // Always fail, this proto isn't used
+}
+
 service HelloService {
     rpc Hello(HelloRequest) returns (HelloResponse);
+
+    rpc Fail(FailRequest) returns (FailResponse);
 }

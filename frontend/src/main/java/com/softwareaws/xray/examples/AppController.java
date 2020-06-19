@@ -105,6 +105,12 @@ public class AppController {
                                                                                                               .setName("X-Ray")
                                                                                                               .build());
 
+        try {
+            helloService.fail(HelloServiceOuterClass.FailRequest.newBuilder().setReason("bad cat").build());
+        } catch (Throwable t) {
+            // Ignore. It should be in our trace though!
+        }
+
         var planets = appdb.selectFrom(PLANET)
              .fetchInto(Planet.class);
         String randomPlanet = planets.get(ThreadLocalRandom.current().nextInt(planets.size())).getName();

@@ -15,6 +15,8 @@
 
 package com.softwareaws.xray.examples.hello;
 
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 public class HelloService extends HelloServiceGrpc.HelloServiceImplBase {
@@ -25,5 +27,12 @@ public class HelloService extends HelloServiceGrpc.HelloServiceImplBase {
                                                                     .setGreeting("Hello " + request.getName() + "!")
                                                                     .build());
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void fail(HelloServiceOuterClass.FailRequest request,
+                     StreamObserver<HelloServiceOuterClass.FailResponse> responseObserver) {
+        throw new StatusRuntimeException(Status.INTERNAL.withDescription(request.getReason())
+                                                        .withCause(new IllegalStateException("cause")));
     }
 }
