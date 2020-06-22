@@ -126,4 +126,32 @@ services:
       - redis
       - otel
       - xray
-
+  frontend_xray:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - HELLO_SERVICE_ENDPOINT=backend:8081
+      - IMDS_ENDPOINT=imds:1338
+      - OTLP_ENDPOINT=otel:9100
+      - ZIPKIN_ENDPOINT=otel:9411
+      - AWS_XRAY_DAEMON_ADDRESS=xray:2000
+      - DYNAMODB_ENDPOINT=dynamodb:8000
+      - REDIS_ENDPOINT=redis:6379
+      - ENABLE_XRAY_SDK=true
+      - FRONTEND_OPTS=-Dserver.port=9081 -Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor"
+    ports:
+      - '9081:9081'
+    volumes:
+      - ~/.aws:/root/.aws
+    depends_on:
+      - backend
+      - dynamodb-table
+      - imds
+      - mysqldb
+      - redis
+      - otel
+      - xray

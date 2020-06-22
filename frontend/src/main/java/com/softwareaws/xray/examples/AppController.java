@@ -36,6 +36,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -59,6 +60,7 @@ public class AppController {
     private final DSLContext appdb;
     private final StatefulRedisConnection<String, String> fooCache;
     private final Tracer tracer;
+    private final int serverPort;
 
     @Autowired
     public AppController(DynamoDbClient dynamoDb,
@@ -67,7 +69,8 @@ public class AppController {
                          HttpClient apacheClient,
                          DSLContext appdb,
                          StatefulRedisConnection<String, String> fooCache,
-                         Tracer tracer) {
+                         Tracer tracer,
+                         @Value("server.port") int serverPort) {
         this.dynamoDb = dynamoDb;
         this.helloService = helloService;
         this.httpClient = httpClient;
@@ -75,6 +78,7 @@ public class AppController {
         this.appdb = appdb;
         this.fooCache = fooCache;
         this.tracer = tracer;
+        this.serverPort = serverPort;
     }
 
     @GetMapping("/")
@@ -124,7 +128,7 @@ public class AppController {
 
         final String selfResponseContent;
         try {
-            HttpResponse selfResponse = apacheClient.execute(new HttpGet("http://localhost:9080/self"));
+            HttpResponse selfResponse = apacheClient.execute(new HttpGet("http://localhost:" + serverPort + "/self"));
             selfResponseContent = new String(selfResponse.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from self.", e);

@@ -35,7 +35,6 @@ import io.opentelemetry.OpenTelemetry;
 import io.opentelemetry.context.propagation.DefaultContextPropagators;
 import io.opentelemetry.trace.propagation.HttpTraceContext;
 import java.net.URI;
-import java.util.Optional;
 import javax.servlet.Filter;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -43,12 +42,23 @@ import org.apache.http.client.HttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @SpringBootApplication
 public class Application {
 
     private static final boolean ENABLE_XRAY_SDK = "true".equals(System.getenv("ENABLE_XRAY_SDK"));
+
+    private static class OnXrayEnabled implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            return ENABLE_XRAY_SDK;
+        }
+    }
 
     @Bean
     public DynamoDbClient dynamoDb(AwsSdkTracing awsSdkTracing) {
@@ -76,12 +86,9 @@ public class Application {
     }
 
     @Bean
-    public Optional<Filter> servletFilter() {
-        if (ENABLE_XRAY_SDK) {
-            return Optional.of(new AWSXRayServletFilter("OTTest"));
-        } else {
-            return Optional.empty();
-        }
+    @Conditional(OnXrayEnabled.class)
+    public Filter servletFilter() {
+        return new AWSXRayServletFilter("OTTest");
     }
 
     @Bean
@@ -101,7 +108,7 @@ public class Application {
             redisEndpoint = "localhost:6379";
         }
         return RedisClient.create(ClientResources.builder()
-                                                 .tracing(BraveTracing.create(tracing))
+                                                 .tracing(BraveTracing.builder().tracing(tracing).serviceName("FooCache").build())
                                                  .build(),
                                   "redis://" + redisEndpoint)
                           .connect();

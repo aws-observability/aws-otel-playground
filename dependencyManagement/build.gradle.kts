@@ -20,7 +20,7 @@ plugins {
 data class DependencySet(val group: String, val version: String, val modules: List<String>)
 
 val DEPENDENCY_BOMS = listOf(
-        "com.amazonaws:aws-xray-recorder-sdk-bom:2.5.0",
+        "com.amazonaws:aws-xray-recorder-sdk-bom:2.6.1",
         "com.fasterxml.jackson:jackson-bom:2.11.0",
         "io.grpc:grpc-bom:1.29.0",
         "io.zipkin.brave:brave-bom:5.12.3",
@@ -33,7 +33,7 @@ val DEPENDENCY_BOMS = listOf(
 val DEPENDENCY_SETS = listOf(
         DependencySet(
                 "io.opentelemetry.auto",
-                "0.5.0-20200616.035546-3",
+                "0.5.0-20200619.060911-6",
                 listOf(
                         "opentelemetry-auto",
                         "opentelemetry-auto-exporter-otlp"
