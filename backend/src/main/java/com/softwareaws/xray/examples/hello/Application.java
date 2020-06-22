@@ -44,7 +44,7 @@ public class Application {
                    .sampler(Sampler.ALWAYS_SAMPLE)
                    .traceId128Bit(true)
                    .supportsJoin(false)
-                   .localServiceName("OTTest")
+                   .localServiceName("HelloService")
                    // While Zipkin supports X-Ray propagation, we make sure to use B3 or else remote calls will end up being
                    // merged with the normal X-Ray SDK tracer, which is generally good but not when we want to compare the
                    // tracers to each other.

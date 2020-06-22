@@ -60,7 +60,7 @@ public class AppController {
     private final DSLContext appdb;
     private final StatefulRedisConnection<String, String> fooCache;
     private final Tracer tracer;
-    private final int serverPort;
+    private final String serverPort;
 
     @Autowired
     public AppController(DynamoDbClient dynamoDb,
@@ -70,7 +70,7 @@ public class AppController {
                          DSLContext appdb,
                          StatefulRedisConnection<String, String> fooCache,
                          Tracer tracer,
-                         @Value("server.port") int serverPort) {
+                         @Value("${server.port}") String serverPort) {
         this.dynamoDb = dynamoDb;
         this.helloService = helloService;
         this.httpClient = httpClient;
