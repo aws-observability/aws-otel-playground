@@ -36,7 +36,7 @@ allprojects {
 
         dependencies {
             configurations.configureEach {
-                add(name, platform(project(":dependencyManagement")))
+                add(name, enforcedPlatform(project(":dependencyManagement")))
             }
         }
     }

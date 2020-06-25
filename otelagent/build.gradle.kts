@@ -44,7 +44,7 @@ tasks {
         exclude("**/module-info.class")
 
         manifest {
-            attributes.put("Main-Class", "com.softwareaws.xray.opentelemetry.agentbootstrap.AwsAgentBootstrap")
+            attributes.put("Main-Class", "io.opentelemetry.auto.bootstrap.AgentBootstrap")
             attributes.put("Agent-Class", "com.softwareaws.xray.opentelemetry.agentbootstrap.AwsAgentBootstrap")
             attributes.put("Premain-Class", "com.softwareaws.xray.opentelemetry.agentbootstrap.AwsAgentBootstrap")
             attributes.put("Can-Redefine-Classes", "true")

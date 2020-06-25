@@ -31,11 +31,11 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
-public class AwsXrayPropagator implements HttpTextFormat {
+public class AwsXRayPropagator implements HttpTextFormat {
     // Visible for testing
     static final String TRACE_HEADER_KEY = "X-Amzn-Trace-Id";
 
-    private static final Logger logger = Logger.getLogger(AwsXrayPropagator.class.getName());
+    private static final Logger logger = Logger.getLogger(AwsXRayPropagator.class.getName());
 
     private static final char TRACE_HEADER_DELIMITER = ';';
     private static final char KV_DELIMITER = '=';

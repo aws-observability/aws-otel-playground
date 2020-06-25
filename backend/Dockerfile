@@ -38,8 +38,8 @@ COPY --from=build /dist /app
 
 WORKDIR /app
 
-ENV OTLP_ENDPOINT localhost:9100
+ENV OTA_EXPORTER_OTLP_ENDPOINT localhost:9100
+ENV OTEL_RESOURCE_ATTRIBUTES 'service.name=HelloService'
+ENV JAVA_OPTS -javaagent:/app/otel/opentelemetry-auto-aws.jar
 
-CMD JAVA_OPTS="-javaagent:/app/otel/opentelemetry-auto-aws.jar \
-  -Dota.aws.service.name=HelloService \
-  -Dota.exporter.otlp.endpoint=\$OTLP_ENDPOINT" /app/bin/backend
+CMD /app/bin/backend
