@@ -39,4 +39,6 @@ service HelloService {
     rpc Hello(HelloRequest) returns (HelloResponse);
 
     rpc Fail(FailRequest) returns (FailResponse);
+
+    rpc BadRequest(FailRequest) returns (FailResponse);
 }

@@ -87,10 +87,11 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     environment:
-      - OTLP_ENDPOINT=otel:9100
+      - OTA_EXPORTER_OTLP_ENDPOINT=otel:9100
       - IMDS_ENDPOINT=imds:1338
       - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
+      - BACKEND_OPTS=-Dotel.aws.imds.endpointOverride=imds:1338
     ports:
       - '8081:8081'
     depends_on:
@@ -108,12 +109,12 @@ services:
       - AWS_REGION
       - HELLO_SERVICE_ENDPOINT=backend:8081
       - IMDS_ENDPOINT=imds:1338
-      - OTLP_ENDPOINT=otel:9100
+      - OTA_EXPORTER_OTLP_ENDPOINT=otel:9100
       - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - REDIS_ENDPOINT=redis:6379
-      - FRONTEND_OPTS=-Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor"
+      - FRONTEND_OPTS=-Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor" -Dotel.aws.imds.endpointOverride=imds:1338
     ports:
       - '9080:9080'
     volumes:

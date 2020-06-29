@@ -25,13 +25,13 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.opentelemetry.trace.TracingContextUtils;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import okhttp3.Call;
-import org.apache.http.HttpResponse;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.jooq.DSLContext;
@@ -114,6 +114,11 @@ public class AppController {
         } catch (Throwable t) {
             // Ignore. It should be in our trace though!
         }
+        try {
+            helloService.badRequest(HelloServiceOuterClass.FailRequest.newBuilder().setReason("bad to the bone").build());
+        } catch (Throwable t) {
+            // Ignore. It should be in our trace though!
+        }
 
         try {
             apacheClient.execute(new HttpGet("https://4cz4hdh1wb.execute-api.us-west-2.amazonaws.com/ot-test/"))
@@ -127,9 +132,9 @@ public class AppController {
         String randomPlanet = planets.get(ThreadLocalRandom.current().nextInt(planets.size())).getName();
 
         final String selfResponseContent;
-        try {
-            HttpResponse selfResponse = apacheClient.execute(new HttpGet("http://localhost:" + serverPort + "/self"));
-            selfResponseContent = new String(selfResponse.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
+        try (Response selfResponse = httpClient.newCall(
+            new Request.Builder().url("http://localhost:" + serverPort + "/self").build()).execute()){
+            selfResponseContent = selfResponse.body().string();
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }

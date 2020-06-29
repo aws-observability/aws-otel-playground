@@ -35,4 +35,11 @@ public class HelloService extends HelloServiceGrpc.HelloServiceImplBase {
         throw new StatusRuntimeException(Status.INTERNAL.withDescription(request.getReason())
                                                         .withCause(new IllegalStateException("cause")));
     }
+
+    @Override
+    public void badRequest(HelloServiceOuterClass.FailRequest request,
+                           StreamObserver<HelloServiceOuterClass.FailResponse> responseObserver) {
+        throw new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription(request.getReason())
+                                                                .withCause(new IllegalStateException("cause")));
+    }
 }
