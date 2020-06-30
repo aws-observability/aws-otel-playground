@@ -42,6 +42,7 @@ dependencies {
     implementation("io.zipkin.brave:brave-instrumentation-okhttp3")
     implementation("io.zipkin.brave:brave-instrumentation-spring-webmvc")
     implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
+    implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
     implementation("mysql:mysql-connector-java:8.0.20")
     implementation("org.apache.httpcomponents:httpclient:4.5.12")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

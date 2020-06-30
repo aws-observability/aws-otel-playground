@@ -38,10 +38,14 @@ services:
       - '3306:3306'
     volumes:
     - ./scripts/db:/docker-entrypoint-initdb.d
-  redis:
+  cats-cache:
     image: redis:6
     ports:
       - '6379:6379'
+  dogs-cache:
+    image: redis:6
+    ports:
+      - '6380:6379'
   jaeger-server:
     image: jaegertracing/all-in-one:latest
     ports:
@@ -141,7 +145,8 @@ services:
       - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
-      - REDIS_ENDPOINT=redis:6379
+      - CATS_CACHE_ENDPOINT=cats-cache:6379
+      - DOGS_CACHE_ENDPOINT=dogs-cache:6379
       - ENABLE_XRAY_SDK=true
       - FRONTEND_OPTS=-Dserver.port=9081 -Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor"
     ports:
@@ -153,6 +158,7 @@ services:
       - dynamodb-table
       - imds
       - mysqldb
-      - redis
+      - cats-cache
+      - dogs-cache
       - otel
       - xray

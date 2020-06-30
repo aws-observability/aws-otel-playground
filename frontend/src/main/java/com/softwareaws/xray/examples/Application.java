@@ -51,6 +51,8 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 @SpringBootApplication
 public class Application {
 
+    @interface Cats {}
+
     private static final boolean ENABLE_XRAY_SDK = "true".equals(System.getenv("ENABLE_XRAY_SDK"));
 
     private static class OnXrayEnabled implements Condition {
@@ -102,13 +104,26 @@ public class Application {
     }
 
     @Bean
-    public StatefulRedisConnection<String, String> fooCache(Tracing tracing) {
+    public StatefulRedisConnection<String, String> catsCache(Tracing tracing) {
         String redisEndpoint = System.getenv("REDIS_ENDPOINT");
         if (redisEndpoint == null) {
             redisEndpoint = "localhost:6379";
         }
         return RedisClient.create(ClientResources.builder()
-                                                 .tracing(BraveTracing.builder().tracing(tracing).serviceName("FooCache").build())
+                                                 .tracing(BraveTracing.builder().tracing(tracing).serviceName("CatsCache").build())
+                                                 .build(),
+                                  "redis://" + redisEndpoint)
+                          .connect();
+    }
+
+    @Bean
+    public StatefulRedisConnection<String, String> dogsCache(Tracing tracing) {
+        String redisEndpoint = System.getenv("REDIS_ENDPOINT");
+        if (redisEndpoint == null) {
+            redisEndpoint = "localhost:6380";
+        }
+        return RedisClient.create(ClientResources.builder()
+                                                 .tracing(BraveTracing.builder().tracing(tracing).serviceName("DogsCache").build())
                                                  .build(),
                                   "redis://" + redisEndpoint)
                           .connect();

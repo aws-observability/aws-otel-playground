@@ -58,7 +58,8 @@ public class AppController {
     private final Call.Factory httpClient;
     private final HttpClient apacheClient;
     private final DSLContext appdb;
-    private final StatefulRedisConnection<String, String> fooCache;
+    private final StatefulRedisConnection<String, String> catsCache;
+    private final StatefulRedisConnection<String, String> dogsCache;
     private final Tracer tracer;
     private final String serverPort;
 
@@ -68,7 +69,8 @@ public class AppController {
                          Call.Factory httpClient,
                          HttpClient apacheClient,
                          DSLContext appdb,
-                         StatefulRedisConnection<String, String> fooCache,
+                         StatefulRedisConnection<String, String> catsCache,
+                         StatefulRedisConnection<String, String> dogsCache,
                          Tracer tracer,
                          @Value("${server.port}") String serverPort) {
         this.dynamoDb = dynamoDb;
@@ -76,7 +78,8 @@ public class AppController {
         this.httpClient = httpClient;
         this.apacheClient = apacheClient;
         this.appdb = appdb;
-        this.fooCache = fooCache;
+        this.catsCache = catsCache;
+        this.dogsCache = dogsCache;
         this.tracer = tracer;
         this.serverPort = serverPort;
     }
@@ -102,8 +105,8 @@ public class AppController {
                                                                          .build()))
                                        .build());
 
-        fooCache.sync().get("redis1");
-        fooCache.sync().get("redis2");
+        catsCache.sync().get("garfield");
+        dogsCache.sync().get("odie");
 
         HelloServiceOuterClass.HelloResponse response = helloService.hello(HelloServiceOuterClass.HelloRequest.newBuilder()
                                                                                                               .setName("X-Ray")
@@ -139,8 +142,8 @@ public class AppController {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }
 
-        fooCache.sync().set("redis1", "value1");
-        fooCache.sync().set("redis2", "value2");
+        catsCache.sync().set("garfield", "fat");
+        dogsCache.sync().set("odie", "funny");
 
         String traceId = TracingContextUtils.getCurrentSpan().getContext().getTraceId().toLowerBase16();
         return "<html><body>"
