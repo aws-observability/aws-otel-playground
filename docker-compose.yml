@@ -58,8 +58,9 @@ services:
       - '9412:9411'
   otel:
     #build:
-    #  context: https://github.com/anuraaga/opentelemetry-collector-contrib.git#custom
-    image: otel/opentelemetry-collector-contrib-dev
+    #  context: ../opentelemetry-collector-contrib
+    #  dockerfile: examples/tracing/Dockerfile
+    image: otel/opentelemetry-collector-contrib-dev:4a5910d92ed585257a0351aef8d7f15198ea72dc
     command: --config /config/collector-config.yml
     environment:
       - AWS_ACCESS_KEY_ID
