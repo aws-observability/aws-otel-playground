@@ -38,6 +38,7 @@ WORKDIR /app
 
 ENV OTA_EXPORTER_OTLP_ENDPOINT localhost:9100
 ENV OTEL_RESOURCE_ATTRIBUTES 'service.name=OTTest'
+ENV OTA_ENDPOINT_PEER_SERVICE_MAPPING 'cats-cache:6379=cats-cache,docs-cache:6379=dogs-cache'
 ENV JAVA_OPTS -javaagent:/app/otel/opentelemetry-auto-aws.jar
 
 CMD /app/bin/frontend

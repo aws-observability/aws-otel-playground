@@ -32,14 +32,14 @@ public class HelloService extends HelloServiceGrpc.HelloServiceImplBase {
     @Override
     public void fail(HelloServiceOuterClass.FailRequest request,
                      StreamObserver<HelloServiceOuterClass.FailResponse> responseObserver) {
-        throw new StatusRuntimeException(Status.INTERNAL.withDescription(request.getReason())
-                                                        .withCause(new IllegalStateException("cause")));
+        responseObserver.onError(new StatusRuntimeException(Status.INTERNAL.withDescription(request.getReason())
+                                                                           .withCause(new IllegalStateException("cause"))));
     }
 
     @Override
     public void badRequest(HelloServiceOuterClass.FailRequest request,
                            StreamObserver<HelloServiceOuterClass.FailResponse> responseObserver) {
-        throw new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription(request.getReason())
-                                                                .withCause(new IllegalStateException("cause")));
-    }
+        responseObserver.onError(new StatusRuntimeException(
+            Status.INVALID_ARGUMENT.withDescription(request.getReason())
+                                   .withCause(new IllegalArgumentException("cause"))));    }
 }

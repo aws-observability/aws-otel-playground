@@ -24,7 +24,7 @@ java {
 }
 
 dependencies {
-    compileOnly("io.opentelemetry.auto", "opentelemetry-auto", classifier = "all")
+    compileOnly("io.opentelemetry.instrumentation.auto", "opentelemetry-javaagent", classifier = "all")
     compileOnly("io.opentelemetry:opentelemetry-sdk")
     compileOnly("org.slf4j:slf4j-api:1.7.30")
 

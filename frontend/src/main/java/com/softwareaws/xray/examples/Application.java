@@ -29,8 +29,6 @@ import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.resource.ClientResources;
-import io.lettuce.core.tracing.BraveTracing;
 import io.opentelemetry.OpenTelemetry;
 import io.opentelemetry.context.propagation.DefaultContextPropagators;
 import io.opentelemetry.trace.propagation.HttpTraceContext;
@@ -105,27 +103,21 @@ public class Application {
 
     @Bean
     public StatefulRedisConnection<String, String> catsCache(Tracing tracing) {
-        String redisEndpoint = System.getenv("REDIS_ENDPOINT");
+        String redisEndpoint = System.getenv("CATS_CACHE_ENDPOINT");
         if (redisEndpoint == null) {
             redisEndpoint = "localhost:6379";
         }
-        return RedisClient.create(ClientResources.builder()
-                                                 .tracing(BraveTracing.builder().tracing(tracing).serviceName("CatsCache").build())
-                                                 .build(),
-                                  "redis://" + redisEndpoint)
+        return RedisClient.create("redis://" + redisEndpoint)
                           .connect();
     }
 
     @Bean
     public StatefulRedisConnection<String, String> dogsCache(Tracing tracing) {
-        String redisEndpoint = System.getenv("REDIS_ENDPOINT");
+        String redisEndpoint = System.getenv("DOGS_CACHE_ENDPOINT");
         if (redisEndpoint == null) {
             redisEndpoint = "localhost:6380";
         }
-        return RedisClient.create(ClientResources.builder()
-                                                 .tracing(BraveTracing.builder().tracing(tracing).serviceName("DogsCache").build())
-                                                 .build(),
-                                  "redis://" + redisEndpoint)
+        return RedisClient.create("redis://" + redisEndpoint)
                           .connect();
     }
 

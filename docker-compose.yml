@@ -117,7 +117,8 @@ services:
       - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
-      - REDIS_ENDPOINT=redis:6379
+      - CATS_CACHE_ENDPOINT=cats-cache:6379
+      - DOGS_CACHE_ENDPOINT=dogs-cache:6379
       - FRONTEND_OPTS=-Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor" -Dotel.aws.imds.endpointOverride=imds:1338
     ports:
       - '9080:9080'
@@ -128,7 +129,8 @@ services:
       - dynamodb-table
       - imds
       - mysqldb
-      - redis
+      - cats-cache
+      - dogs-cache
       - otel
       - xray
   frontend_xray:
