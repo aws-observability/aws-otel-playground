@@ -13,12 +13,20 @@
  * permissions and limitations under the License.
  */
 
-include(":api")
-include(":appdb")
-include(":awsagentprovider")
-include(":awsexporter")
-include(":backend")
-include(":backend-webflux")
-include(":dependencyManagement")
-include(":frontend")
-include(":otelagent")
+plugins {
+    application
+    java
+}
+
+base {
+    archivesBaseName = "backend-webflux"
+}
+
+application {
+    mainClassName = "com.softwareaws.xray.examples.webflux.WebfluxApplication"
+}
+
+dependencies {
+    implementation("io.lettuce:lettuce-core")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+}

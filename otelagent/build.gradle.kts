@@ -32,7 +32,7 @@ tasks {
     processResources {
         val providerArchive = agentProviderShadowJarTask.get().archiveFile
         from(zipTree(providerArchive)) {
-            into("auto-tooling-and-instrumentation.isolated")
+            into("inst")
             rename("(^.*)\\.class$", "$1.classdata")
         }
         dependsOn(agentProviderShadowJarTask)

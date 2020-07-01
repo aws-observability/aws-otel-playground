@@ -37,6 +37,8 @@ import javax.servlet.Filter;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.nio.client.HttpAsyncClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -99,6 +101,13 @@ public class Application {
     @Bean
     public HttpClient apacheClient(HttpTracing httpTracing) {
         return new TracedHttpClient(TracingHttpClientBuilder.create(httpTracing).build(), AWSXRay.getGlobalRecorder());
+    }
+
+    @Bean
+    public HttpAsyncClient apacheAsyncClient() {
+        var client = HttpAsyncClients.createDefault();
+        client.start();
+        return client;
     }
 
     @Bean

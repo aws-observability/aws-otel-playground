@@ -18,6 +18,7 @@ package com.softwareaws.xray.examples;
 import static com.softwareaws.xray.examples.appdb.tables.Planet.PLANET;
 
 import brave.Tracer;
+import com.google.common.util.concurrent.Futures;
 import com.softwareaws.xray.examples.appdb.tables.pojos.Planet;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import com.softwareaws.xray.examples.hello.HelloServiceOuterClass;
@@ -32,8 +33,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.nio.client.HttpAsyncClient;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,10 +57,13 @@ public class AppController {
 
     private static final String AWS_REGION = Objects.requireNonNullElse(System.getenv("AWS_REGION"), "insert-region");
 
+    private static final String WEBFLUX_BACKEND_ENDPOINT = System.getenv().getOrDefault("WEBFLUX_BACKEND_ENDPOINT", "localhost:8082");
+
     private final DynamoDbClient dynamoDb;
     private final HelloServiceGrpc.HelloServiceBlockingStub helloService;
     private final Call.Factory httpClient;
     private final HttpClient apacheClient;
+    private final HttpAsyncClient apacheAsyncClient;
     private final DSLContext appdb;
     private final StatefulRedisConnection<String, String> catsCache;
     private final StatefulRedisConnection<String, String> dogsCache;
@@ -68,7 +75,7 @@ public class AppController {
                          HelloServiceGrpc.HelloServiceBlockingStub helloService,
                          Call.Factory httpClient,
                          HttpClient apacheClient,
-                         DSLContext appdb,
+                         HttpAsyncClient apacheAsyncClient, DSLContext appdb,
                          StatefulRedisConnection<String, String> catsCache,
                          StatefulRedisConnection<String, String> dogsCache,
                          Tracer tracer,
@@ -77,6 +84,7 @@ public class AppController {
         this.helloService = helloService;
         this.httpClient = httpClient;
         this.apacheClient = apacheClient;
+        this.apacheAsyncClient = apacheAsyncClient;
         this.appdb = appdb;
         this.catsCache = catsCache;
         this.dogsCache = dogsCache;
@@ -134,6 +142,22 @@ public class AppController {
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from lambda API", e);
         }
+
+        Futures.getUnchecked(
+            apacheAsyncClient.execute(new HttpGet("http://" + WEBFLUX_BACKEND_ENDPOINT + "/"),
+                                      new FutureCallback<>() {
+                                          @Override
+                                          public void completed(HttpResponse result) {
+                                          }
+
+                                          @Override
+                                          public void failed(Exception ex) {
+                                          }
+
+                                          @Override
+                                          public void cancelled() {
+                                          }
+                                      }));
 
         var planets = appdb.selectFrom(PLANET)
              .fetchInto(Planet.class);

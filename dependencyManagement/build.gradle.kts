@@ -32,6 +32,11 @@ val DEPENDENCY_BOMS = listOf(
 
 val DEPENDENCY_SETS = listOf(
         DependencySet(
+                "io.lettuce",
+                "5.3.1.RELEASE",
+                listOf("lettuce-core")
+        ),
+        DependencySet(
                 "io.opentelemetry.instrumentation.auto",
                 "0.5.0-20200701.032958-14",
                 listOf(

@@ -1,5 +1,10 @@
 version: '3.8'
 services:
+  base-build:
+    image: docker-base-build
+    build:
+      context: .
+      dockerfile: scripts/docker-base-build/Dockerfile
   dynamodb:
     image: amazon/dynamodb-local
     command: -jar DynamoDBLocal.jar -inMemory -sharedDb
@@ -100,6 +105,25 @@ services:
     ports:
       - '8081:8081'
     depends_on:
+      - base-build
+      - imds
+      - mysqldb
+      - otel
+      - xray
+  backend-webflux:
+    build:
+      context: .
+      dockerfile: backend-webflux/Dockerfile
+    environment:
+      - OTA_EXPORTER_OTLP_ENDPOINT=otel:9100
+      - IMDS_ENDPOINT=imds:1338
+      - BACKEND_WEBFLUX_OPTS=-Dotel.aws.imds.endpointOverride=imds:1338
+      - CATS_CACHE_ENDPOINT=cats-cache:6379
+      - DOGS_CACHE_ENDPOINT=dogs-cache:6379
+    ports:
+      - '8082:8082'
+    depends_on:
+      - base-build
       - imds
       - mysqldb
       - otel
@@ -113,6 +137,7 @@ services:
       - AWS_SECRET_ACCESS_KEY
       - AWS_REGION
       - HELLO_SERVICE_ENDPOINT=backend:8081
+      - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - IMDS_ENDPOINT=imds:1338
       - OTA_EXPORTER_OTLP_ENDPOINT=otel:9100
       - ZIPKIN_ENDPOINT=otel:9411
@@ -126,6 +151,7 @@ services:
     volumes:
       - ~/.aws:/root/.aws
     depends_on:
+      - base-build
       - backend
       - dynamodb-table
       - imds
@@ -143,6 +169,7 @@ services:
       - AWS_SECRET_ACCESS_KEY
       - AWS_REGION
       - HELLO_SERVICE_ENDPOINT=backend:8081
+      - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - IMDS_ENDPOINT=imds:1338
       - OTLP_ENDPOINT=otel:9100
       - ZIPKIN_ENDPOINT=otel:9411
@@ -157,6 +184,7 @@ services:
     volumes:
       - ~/.aws:/root/.aws
     depends_on:
+      - base-build
       - backend
       - dynamodb-table
       - imds

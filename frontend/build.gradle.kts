@@ -33,7 +33,7 @@ dependencies {
     implementation("com.amazonaws:aws-xray-recorder-sdk-apache-http")
     implementation("com.amazonaws:aws-xray-recorder-sdk-core")
     implementation("io.grpc:grpc-netty-shaded")
-    implementation("io.lettuce:lettuce-core:5.3.1.RELEASE")
+    implementation("io.lettuce:lettuce-core")
     implementation("io.opentelemetry:opentelemetry-sdk")
     implementation("io.zipkin.aws:brave-instrumentation-aws-java-sdk-v2-core:0.21.1")
     implementation("io.zipkin.aws:zipkin-reporter-xray-udp:0.21.1")
@@ -45,6 +45,7 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
     implementation("mysql:mysql-connector-java:8.0.20")
     implementation("org.apache.httpcomponents:httpclient:4.5.12")
+    implementation("org.apache.httpcomponents:httpasyncclient:4.1.4")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-jooq") {
         // X-Ray SDK only supports Tomcat connection pool so use it for comparison. OpenTelemetry users should stick
