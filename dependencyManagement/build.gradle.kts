@@ -33,7 +33,7 @@ val DEPENDENCY_BOMS = listOf(
 val DEPENDENCY_SETS = listOf(
         DependencySet(
                 "io.opentelemetry.instrumentation.auto",
-                "0.5.0-20200629.232608-9",
+                "0.5.0-20200701.032958-14",
                 listOf(
                         "opentelemetry-javaagent",
                         "opentelemetry-auto-exporter-otlp"

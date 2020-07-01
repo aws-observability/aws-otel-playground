@@ -122,6 +122,11 @@ public class AppController {
         } catch (Throwable t) {
             // Ignore. It should be in our trace though!
         }
+        try {
+            helloService.throttled(HelloServiceOuterClass.FailRequest.newBuilder().setReason("too fast").build());
+        } catch (Throwable t) {
+            // Ignore. It should be in our trace though!
+        }
 
         try {
             apacheClient.execute(new HttpGet("https://4cz4hdh1wb.execute-api.us-west-2.amazonaws.com/ot-test/"))

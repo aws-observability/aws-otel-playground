@@ -41,4 +41,6 @@ service HelloService {
     rpc Fail(FailRequest) returns (FailResponse);
 
     rpc BadRequest(FailRequest) returns (FailResponse);
+
+    rpc Throttled(FailRequest) returns (FailResponse);
 }

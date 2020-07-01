@@ -41,5 +41,14 @@ public class HelloService extends HelloServiceGrpc.HelloServiceImplBase {
                            StreamObserver<HelloServiceOuterClass.FailResponse> responseObserver) {
         responseObserver.onError(new StatusRuntimeException(
             Status.INVALID_ARGUMENT.withDescription(request.getReason())
-                                   .withCause(new IllegalArgumentException("cause"))));    }
+                                   .withCause(new IllegalArgumentException("cause"))));
+    }
+
+    @Override
+    public void throttled(HelloServiceOuterClass.FailRequest request,
+                          StreamObserver<HelloServiceOuterClass.FailResponse> responseObserver) {
+        responseObserver.onError(new StatusRuntimeException(
+            Status.RESOURCE_EXHAUSTED.withDescription(request.getReason())
+                                     .withCause(new IllegalArgumentException("cause"))));
+    }
 }
