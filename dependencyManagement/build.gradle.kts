@@ -38,7 +38,7 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "io.opentelemetry.instrumentation.auto",
-                "0.5.0-20200701.032958-14",
+                "0.5.0-20200706.134853-20",
                 listOf(
                         "opentelemetry-javaagent",
                         "opentelemetry-auto-exporter-otlp"
