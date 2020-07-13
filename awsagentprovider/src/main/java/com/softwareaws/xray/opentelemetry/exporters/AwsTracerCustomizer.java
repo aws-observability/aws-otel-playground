@@ -18,6 +18,7 @@ package com.softwareaws.xray.opentelemetry.exporters;
 import io.opentelemetry.OpenTelemetry;
 import io.opentelemetry.auto.bootstrap.spi.TracerCustomizer;
 import io.opentelemetry.context.propagation.DefaultContextPropagators;
+import io.opentelemetry.extensions.trace.propagation.AwsXRayPropagator;
 import io.opentelemetry.sdk.trace.TracerSdkProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class AwsTracerCustomizer implements TracerCustomizer {
     public void configure(TracerSdkProvider unused) {
         logger.info("AwsTracerCustomizer");
         OpenTelemetry.setPropagators(DefaultContextPropagators.builder()
-                                                              .addHttpTextFormat(new AwsXRayPropagator())
-                                                              .build());
+            .addHttpTextFormat(new AwsXRayPropagator())
+            .build());
     }
 }

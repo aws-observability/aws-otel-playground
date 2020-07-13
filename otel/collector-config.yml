@@ -1,6 +1,8 @@
 receivers:
   otlp:
-    endpoint: 0.0.0.0:9100
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:9100
   zipkin:
     endpoint: 0.0.0.0:9411
 exporters:
@@ -9,7 +11,7 @@ exporters:
   awsxray:
     local_mode: true
   zipkin:
-    url: "http://zipkin-server:9411/api/v2/spans"
+    endpoint: "http://zipkin-server:9411/api/v2/spans"
     format: proto
   jaeger:
     endpoint: jaeger-server:14250

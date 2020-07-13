@@ -26,7 +26,7 @@ java {
 }
 
 dependencies {
-    compileOnly("io.opentelemetry:opentelemetry-sdk-contrib-auto-config")
+    compileOnly("io.opentelemetry:opentelemetry-sdk-extension-auto-config")
 
     implementation("io.opentelemetry:opentelemetry-exporters-otlp") {
         exclude("io.opentelemetry", "opentelemetry-sdk")

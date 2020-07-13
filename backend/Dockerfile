@@ -11,7 +11,7 @@ COPY --from=build /dist /app
 
 WORKDIR /app
 
-ENV OTA_EXPORTER_OTLP_ENDPOINT localhost:9100
+ENV OTEL_OTLP_ENDPOINT localhost:9100
 ENV OTEL_RESOURCE_ATTRIBUTES 'service.name=HelloService'
 ENV JAVA_OPTS -javaagent:/app/otel/opentelemetry-auto-aws.jar
 

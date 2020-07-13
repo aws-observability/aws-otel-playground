@@ -15,8 +15,8 @@
 
 package com.softwareaws.xray.opentelemetry.exporters;
 
-import io.opentelemetry.sdk.contrib.trace.aws.AwsXRayIdsGenerator;
-import io.opentelemetry.sdk.contrib.trace.aws.resource.AwsResource;
+import io.opentelemetry.sdk.extensions.trace.aws.AwsXRayIdsGenerator;
+import io.opentelemetry.sdk.extensions.trace.aws.resource.AwsResource;
 import io.opentelemetry.sdk.resources.EnvVarResource;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.TracerSdkProvider;
