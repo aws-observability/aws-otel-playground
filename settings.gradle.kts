@@ -16,7 +16,6 @@
 include(":api")
 include(":appdb")
 include(":awsagentprovider")
-include(":awsexporter")
 include(":backend")
 include(":backend-webflux")
 include(":dependencyManagement")

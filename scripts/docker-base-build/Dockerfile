@@ -10,7 +10,6 @@ ADD gradle /src/gradle/
 ADD api/build.gradle.kts /src/api/
 ADD appdb/build.gradle.kts /src/appdb/
 ADD awsagentprovider/build.gradle.kts /src/awsagentprovider/
-ADD awsexporter/build.gradle.kts /src/awsexporter/
 ADD backend/build.gradle.kts /src/backend/
 ADD backend-webflux/build.gradle.kts /src/backend-webflux/
 ADD dependencyManagement/build.gradle.kts /src/dependencyManagement/
