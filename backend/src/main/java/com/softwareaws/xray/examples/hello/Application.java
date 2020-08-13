@@ -25,6 +25,7 @@ import brave.sampler.Sampler;
 import io.grpc.ServerBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import spark.Spark;
 import zipkin2.reporter.brave.AsyncZipkinSpanHandler;
 import zipkin2.reporter.brave.ZipkinSpanHandler;
 import zipkin2.reporter.okhttp3.OkHttpSender;
@@ -33,6 +34,11 @@ import zipkin2.reporter.xray_udp.XRayUDPReporter;
 public class Application {
 
     private static final Logger logger = LogManager.getLogger();
+
+    private static void setupSpark() {
+        Spark.port(8083);
+        Spark.get("/hellospark", (req, res) -> "ok");
+    }
 
     public static void main(String[] args) throws Exception {
         String zipkinEndpoint = System.getenv("ZIPKIN_ENDPOINT");
@@ -77,9 +83,14 @@ public class Application {
                                   .build();
 
         server.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            server.shutdownNow();
+            Spark.stop();
+        }));
 
         logger.info("Server started at port 8081.");
+
+        setupSpark();
 
         server.awaitTermination();
     }

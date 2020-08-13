@@ -25,11 +25,13 @@ application {
 dependencies {
     implementation(project(":api"))
 
+    implementation("com.sparkjava:spark-core:2.9.2")
     implementation("io.grpc:grpc-netty-shaded")
     implementation("io.zipkin.aws:zipkin-reporter-xray-udp:0.21.1")
     implementation("io.zipkin.brave:brave-instrumentation-grpc")
     implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
     implementation("org.apache.logging.log4j:log4j-core")
 
+    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl")
     runtimeOnly("io.opentelemetry:opentelemetry-sdk")
 }

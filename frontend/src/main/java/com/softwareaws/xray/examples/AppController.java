@@ -58,6 +58,7 @@ public class AppController {
     private static final String AWS_REGION = Objects.requireNonNullElse(System.getenv("AWS_REGION"), "insert-region");
 
     private static final String WEBFLUX_BACKEND_ENDPOINT = System.getenv().getOrDefault("WEBFLUX_BACKEND_ENDPOINT", "localhost:8082");
+    private static final String SPARK_BACKEND_ENDPOINT = System.getenv().getOrDefault("SPARK_BACKEND_ENDPOINT", "localhost:8083");
 
     private final DynamoDbClient dynamoDb;
     private final HelloServiceGrpc.HelloServiceBlockingStub helloService;
@@ -160,15 +161,21 @@ public class AppController {
                                       }));
 
         var planets = appdb.selectFrom(PLANET)
-             .fetchInto(Planet.class);
+                           .fetchInto(Planet.class);
         String randomPlanet = planets.get(ThreadLocalRandom.current().nextInt(planets.size())).getName();
 
         final String selfResponseContent;
         try (Response selfResponse = httpClient.newCall(
-            new Request.Builder().url("http://localhost:" + serverPort + "/self").build()).execute()){
+            new Request.Builder().url("http://localhost:" + serverPort + "/self").build()).execute()) {
             selfResponseContent = selfResponse.body().string();
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from self.", e);
+        }
+
+        try (Response sparkResponse =
+                 httpClient.newCall(new Request.Builder().url("http://" + SPARK_BACKEND_ENDPOINT + "/hellospark").build()).execute()) {
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not fetch from spark.", e);
         }
 
         catsCache.sync().set("garfield", "fat");
@@ -213,7 +220,7 @@ public class AppController {
 
     private static String xrayUrl(String traceId) {
         return "https://" + AWS_REGION + ".console.aws.amazon.com/xray/home?region=" + AWS_REGION + "#/traces/1-" + traceId.substring(0, 8)
-            + "-" + traceId.substring(8);
+               + "-" + traceId.substring(8);
     }
 
     private static String zipkinUrl(String traceId) {
