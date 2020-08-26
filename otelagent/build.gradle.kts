@@ -24,7 +24,7 @@ java {
 }
 
 dependencies {
-    implementation("io.opentelemetry.instrumentation.auto", "opentelemetry-javaagent", classifier = "all")
+    implementation("io.opentelemetry.javaagent", "opentelemetry-javaagent", classifier = "all")
 }
 
 val agentProviderShadowJarTask = project(":awsagentprovider").tasks.named<Jar>("shadowJar")
@@ -44,7 +44,7 @@ tasks {
         exclude("**/module-info.class")
 
         manifest {
-            attributes.put("Main-Class", "io.opentelemetry.auto.bootstrap.AgentBootstrap")
+            attributes.put("Main-Class", "io.opentelemetry.javaagent.OpenTelemetryAgent")
             attributes.put("Agent-Class", "com.softwareaws.xray.opentelemetry.agentbootstrap.AwsAgentBootstrap")
             attributes.put("Premain-Class", "com.softwareaws.xray.opentelemetry.agentbootstrap.AwsAgentBootstrap")
             attributes.put("Can-Redefine-Classes", "true")

@@ -37,11 +37,10 @@ val DEPENDENCY_SETS = listOf(
                 listOf("lettuce-core")
         ),
         DependencySet(
-                "io.opentelemetry.instrumentation.auto",
-                "0.8.0-20200812.182934-26",
+                "io.opentelemetry.javaagent",
+                "0.8.0-20200824.194233-64",
                 listOf(
-                        "opentelemetry-javaagent",
-                        "opentelemetry-auto-exporter-otlp"
+                        "opentelemetry-javaagent"
                 )
         ),
         DependencySet(
