@@ -15,6 +15,7 @@ exporters:
     format: proto
   jaeger:
     endpoint: jaeger-server:14250
+    insecure: true
 service:
   pipelines:
     traces:
