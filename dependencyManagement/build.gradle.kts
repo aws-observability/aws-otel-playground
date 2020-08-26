@@ -45,7 +45,7 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "io.opentelemetry",
-                "0.8.0-20200812.153234-21",
+                "20200817.212820-30",
                 listOf(
                         "opentelemetry-api",
                         "opentelemetry-extension-trace-propagators",
