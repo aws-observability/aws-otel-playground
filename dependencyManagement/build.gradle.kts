@@ -37,22 +37,33 @@ val DEPENDENCY_SETS = listOf(
                 listOf("lettuce-core")
         ),
         DependencySet(
-                "io.opentelemetry.javaagent",
-                "0.8.0-20200824.194233-64",
+                "io.opentelemetry",
+                "0.8.0-20200826.153459-48",
                 listOf(
-                        "opentelemetry-javaagent"
+                        "opentelemetry-api",
+                        "opentelemetry-exporters-logging",
+                        "opentelemetry-exporters-otlp"
                 )
         ),
         DependencySet(
                 "io.opentelemetry",
-                "0.8.0-20200817.212820-30",
+                "0.8.0-20200826.153459-49",
                 listOf(
-                        "opentelemetry-api",
+                        "opentelemetry-context-prop",
                         "opentelemetry-extension-trace-propagators",
-                        "opentelemetry-exporters-otlp",
+                        "opentelemetry-proto",
                         "opentelemetry-sdk",
-                        "opentelemetry-sdk-extension-auto-config",
                         "opentelemetry-sdk-extension-aws-v1-support"
+                )
+        ),
+        DependencySet(
+                "io.opentelemetry",
+                "0.8.0-20200826.153459-15",
+                listOf(
+                        "opentelemetry-sdk-common",
+                        "opentelemetry-sdk-correlation-context",
+                        "opentelemetry-sdk-metrics",
+                        "opentelemetry-sdk-tracing"
                 )
         )
 )

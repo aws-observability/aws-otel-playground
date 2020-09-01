@@ -9,20 +9,11 @@ ADD *gradle* /src/
 ADD gradle /src/gradle/
 ADD api/build.gradle.kts /src/api/
 ADD appdb/build.gradle.kts /src/appdb/
-ADD awsagentprovider/build.gradle.kts /src/awsagentprovider/
 ADD backend/build.gradle.kts /src/backend/
 ADD backend-webflux/build.gradle.kts /src/backend-webflux/
 ADD dependencyManagement/build.gradle.kts /src/dependencyManagement/
 ADD frontend/build.gradle.kts /src/frontend/
-ADD otelagent/build.gradle.kts /src/otelagent/
 RUN ./gradlew dependencies
 
-ADD awsagentprovider /src/awsagentprovider/
-ADD otelagent /src/otelagent/
-
-RUN ./gradlew :otelagent:shadowJar
-
 RUN mkdir -p /dist/otel
-RUN cp /src/otelagent/build/libs/otelagent.jar /dist/otel/opentelemetry-auto-aws.jar
-
-CMD echo
+ADD https://github.com/anuraaga/aws-opentelemetry-java-instrumentation/releases/download/v0.8.0-alpha.1/aws-opentelemetry-agent.jar /dist/otel/opentelemetry-auto-aws.jar

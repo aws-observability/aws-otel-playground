@@ -15,9 +15,7 @@
 
 include(":api")
 include(":appdb")
-include(":awsagentprovider")
 include(":backend")
 include(":backend-webflux")
 include(":dependencyManagement")
 include(":frontend")
-include(":otelagent")
