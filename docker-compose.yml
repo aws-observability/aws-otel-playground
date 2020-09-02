@@ -145,6 +145,7 @@ services:
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
+      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=4cz4hdh1wb.execute-api.us-west-2.amazonaws.com=lambda-service,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache
       - FRONTEND_OPTS=-Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor" -Dotel.aws.imds.endpointOverride=imds:1338
     ports:
       - '9080:9080'
@@ -178,7 +179,7 @@ services:
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
       - ENABLE_XRAY_SDK=true
-      - FRONTEND_OPTS=-Dserver.port=9081 -Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor"
+      - FRONTEND_OPTS=-Dserver.port=9081 -Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor" -Dotel.propagators=tracecontext
     ports:
       - '9081:9081'
     volumes:

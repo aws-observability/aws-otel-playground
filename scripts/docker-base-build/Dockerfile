@@ -16,4 +16,4 @@ ADD frontend/build.gradle.kts /src/frontend/
 RUN ./gradlew dependencies
 
 RUN mkdir -p /dist/otel
-ADD https://github.com/anuraaga/aws-opentelemetry-java-instrumentation/releases/download/v0.8.0-alpha.1/aws-opentelemetry-agent.jar /dist/otel/opentelemetry-auto-aws.jar
+ADD https://github.com/anuraaga/aws-opentelemetry-java-instrumentation/releases/latest/download/aws-opentelemetry-agent.jar /dist/otel/opentelemetry-auto-aws.jar

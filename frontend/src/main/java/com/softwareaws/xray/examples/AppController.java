@@ -185,6 +185,7 @@ public class AppController {
                + "<a target=\"_blank\" href=\"http://localhost:9412?limit=10&lookback=900000\">zipkin</a>"
                + "<a target=\"_blank\" href=\"" + zipkinUrl(traceId) + "\">[Trace]</a><br>"
                + "<a target=\"_blank\" href=\"http://localhost:16686?limit=20&lookback=1h&maxDuration&minDuration&service=OTTest\">jaeger</a>"
+               + "<a target=\"_blank\" href=\"" + jaegerUrl(traceId) + "\">[Trace]</a><br>"
                + "</body></html>";
     }
 
@@ -224,6 +225,6 @@ public class AppController {
     }
 
     private static String jaegerUrl(String traceId) {
-        return "http://localhost:9412/zipkin/traces/" + traceId;
+        return "http://localhost:16686/trace/" + traceId;
     }
 }
