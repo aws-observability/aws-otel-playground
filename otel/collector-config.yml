@@ -3,8 +3,6 @@ receivers:
     protocols:
       grpc:
         endpoint: 0.0.0.0:9100
-  zipkin:
-    endpoint: 0.0.0.0:9411
 exporters:
   logging:
     loglevel: info

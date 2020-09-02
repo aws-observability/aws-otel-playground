@@ -15,12 +15,6 @@
 
 package com.softwareaws.xray.examples;
 
-import brave.Tracing;
-import brave.grpc.GrpcTracing;
-import brave.http.HttpTracing;
-import brave.httpclient.TracingHttpClientBuilder;
-import brave.instrumentation.awsv2.AwsSdkTracing;
-import brave.okhttp3.TracingCallFactory;
 import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
 import com.amazonaws.xray.proxies.apache.http.TracedHttpClient;
@@ -37,6 +31,7 @@ import javax.servlet.Filter;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.springframework.boot.SpringApplication;
@@ -64,19 +59,17 @@ public class Application {
     }
 
     @Bean
-    public DynamoDbClient dynamoDb(AwsSdkTracing awsSdkTracing) {
+    public DynamoDbClient dynamoDb() {
         var builder = DynamoDbClient.builder();
         String dynamodbEndpoint = System.getenv("DYNAMODB_ENDPOINT");
         if (dynamodbEndpoint != null) {
             builder.endpointOverride(URI.create("http://" + dynamodbEndpoint));
         }
-        builder.overrideConfiguration(
-            configuration -> configuration.addExecutionInterceptor(awsSdkTracing.executionInterceptor()));
         return builder.build();
     }
 
     @Bean
-    public HelloServiceGrpc.HelloServiceBlockingStub helloService(GrpcTracing grpcTracing) {
+    public HelloServiceGrpc.HelloServiceBlockingStub helloService() {
         String helloServiceEndpoint = System.getenv("HELLO_SERVICE_ENDPOINT");
         if (helloServiceEndpoint == null) {
             helloServiceEndpoint = "localhost:8081";
@@ -84,7 +77,6 @@ public class Application {
         return HelloServiceGrpc.newBlockingStub(ManagedChannelBuilder
                                                     .forTarget(helloServiceEndpoint)
                                                     .usePlaintext()
-                                                    .intercept(grpcTracing.newClientInterceptor())
                                                     .build());
     }
 
@@ -95,13 +87,13 @@ public class Application {
     }
 
     @Bean
-    public Call.Factory httpClient(HttpTracing httpTracing) {
-        return TracingCallFactory.create(httpTracing, new OkHttpClient());
+    public Call.Factory httpClient() {
+        return new OkHttpClient();
     }
 
     @Bean
-    public HttpClient apacheClient(HttpTracing httpTracing) {
-        return new TracedHttpClient(TracingHttpClientBuilder.create(httpTracing).build(), AWSXRay.getGlobalRecorder());
+    public HttpClient apacheClient() {
+        return new TracedHttpClient(HttpClients.createDefault());
     }
 
     @Bean
@@ -112,7 +104,7 @@ public class Application {
     }
 
     @Bean
-    public StatefulRedisConnection<String, String> catsCache(Tracing tracing) {
+    public StatefulRedisConnection<String, String> catsCache() {
         String redisEndpoint = System.getenv("CATS_CACHE_ENDPOINT");
         if (redisEndpoint == null) {
             redisEndpoint = "localhost:6379";
@@ -122,7 +114,7 @@ public class Application {
     }
 
     @Bean
-    public StatefulRedisConnection<String, String> dogsCache(Tracing tracing) {
+    public StatefulRedisConnection<String, String> dogsCache() {
         String redisEndpoint = System.getenv("DOGS_CACHE_ENDPOINT");
         if (redisEndpoint == null) {
             redisEndpoint = "localhost:6380";

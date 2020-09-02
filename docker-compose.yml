@@ -99,7 +99,6 @@ services:
     environment:
       - OTEL_OTLP_ENDPOINT=otel:9100
       - IMDS_ENDPOINT=imds:1338
-      - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - BACKEND_OPTS=-Dotel.aws.imds.endpointOverride=imds:1338
     ports:
@@ -142,7 +141,6 @@ services:
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - IMDS_ENDPOINT=imds:1338
       - OTEL_OTLP_ENDPOINT=otel:9100
-      - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
@@ -175,7 +173,6 @@ services:
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - IMDS_ENDPOINT=imds:1338
       - OTEL_OTLP_ENDPOINT=otel:9100
-      - ZIPKIN_ENDPOINT=otel:9411
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379

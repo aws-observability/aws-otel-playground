@@ -17,7 +17,6 @@ package com.softwareaws.xray.examples;
 
 import static com.softwareaws.xray.examples.appdb.tables.Planet.PLANET;
 
-import brave.Tracer;
 import com.google.common.util.concurrent.Futures;
 import com.softwareaws.xray.examples.appdb.tables.pojos.Planet;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
@@ -68,7 +67,6 @@ public class AppController {
     private final DSLContext appdb;
     private final StatefulRedisConnection<String, String> catsCache;
     private final StatefulRedisConnection<String, String> dogsCache;
-    private final Tracer tracer;
     private final String serverPort;
 
     @Autowired
@@ -79,7 +77,6 @@ public class AppController {
                          HttpAsyncClient apacheAsyncClient, DSLContext appdb,
                          StatefulRedisConnection<String, String> catsCache,
                          StatefulRedisConnection<String, String> dogsCache,
-                         Tracer tracer,
                          @Value("${server.port}") String serverPort) {
         this.dynamoDb = dynamoDb;
         this.helloService = helloService;
@@ -89,7 +86,6 @@ public class AppController {
         this.appdb = appdb;
         this.catsCache = catsCache;
         this.dogsCache = dogsCache;
-        this.tracer = tracer;
         this.serverPort = serverPort;
     }
 
