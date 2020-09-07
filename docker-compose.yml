@@ -1,18 +1,12 @@
 version: '3.8'
 services:
-  base-build:
-    image: docker-base-build
-    build:
-      context: .
-      dockerfile: scripts/docker-base-build/Dockerfile
   dynamodb:
     image: amazon/dynamodb-local
     command: -jar DynamoDBLocal.jar -inMemory -sharedDb
     ports:
       - '8000:8000'
   imds:
-    image: amazon/amazon-ec2-metadata-mock:v0.9.3
-    command: --hostname 0.0.0.0
+    image: amazon/amazon-ec2-metadata-mock:v1.5.0
     ports:
       - '1338:1338'
   dynamodb-table:
@@ -93,45 +87,37 @@ services:
     volumes:
       - ~/.aws:/root/.aws
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
+    image: ghcr.io/anuraaga/otel-playground-backend
     environment:
       - OTEL_OTLP_ENDPOINT=otel:9100
       - IMDS_ENDPOINT=imds:1338
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
-      - BACKEND_OPTS=-Dotel.aws.imds.endpointOverride=imds:1338
+      - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
     ports:
       - '8081:8081'
       - '8083:8083'
     depends_on:
-      - base-build
       - imds
       - mysqldb
       - otel
       - xray
   backend-webflux:
-    build:
-      context: .
-      dockerfile: backend-webflux/Dockerfile
+    image: ghcr.io/anuraaga/otel-playground-backend-webflux
     environment:
       - OTEL_OTLP_ENDPOINT=otel:9100
       - IMDS_ENDPOINT=imds:1338
-      - BACKEND_WEBFLUX_OPTS=-Dotel.aws.imds.endpointOverride=imds:1338
+      - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
     ports:
       - '8082:8082'
     depends_on:
-      - base-build
       - imds
       - mysqldb
       - otel
       - xray
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    image: ghcr.io/anuraaga/otel-playground-frontend
     environment:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
@@ -146,13 +132,13 @@ services:
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
       - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=4cz4hdh1wb.execute-api.us-west-2.amazonaws.com=lambda-service,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache
-      - FRONTEND_OPTS=-Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor" -Dotel.aws.imds.endpointOverride=imds:1338
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/appdb
+      - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
     ports:
       - '9080:9080'
     volumes:
       - ~/.aws:/root/.aws
     depends_on:
-      - base-build
       - backend
       - dynamodb-table
       - imds
@@ -162,9 +148,7 @@ services:
       - otel
       - xray
   frontend_xray:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    image: ghcr.io/anuraaga/otel-playground-frontend
     environment:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
@@ -179,13 +163,15 @@ services:
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
       - ENABLE_XRAY_SDK=true
-      - FRONTEND_OPTS=-Dserver.port=9081 -Dspring.datasource.url="jdbc:mysql://mysqldb:3306/appdb?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor" -Dotel.propagators=tracecontext
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/appdb
+      - OTEL_PROPAGATORS=tracecontext
+      - SERVER_PORT=9081
+      - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
     ports:
       - '9081:9081'
     volumes:
       - ~/.aws:/root/.aws
     depends_on:
-      - base-build
       - backend
       - dynamodb-table
       - imds

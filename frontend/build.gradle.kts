@@ -16,6 +16,7 @@
 plugins {
     application
     java
+    id("com.google.cloud.tools.jib") version "2.5.0"
 }
 
 base {
@@ -42,20 +43,25 @@ dependencies {
     implementation("org.apache.httpcomponents:httpclient:4.5.12")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.4")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-jooq") {
-        // X-Ray SDK only supports Tomcat connection pool so use it for comparison. OpenTelemetry users should stick
-        // to HikariCP for a real app.
-        exclude("com.zaxxer", "HikariCP")
-    }
+    implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.squareup.okhttp3:okhttp:4.7.2")
     implementation("software.amazon.awssdk:apache-client")
     implementation("software.amazon.awssdk:dynamodb")
 
-    runtimeOnly("com.amazonaws:aws-xray-recorder-sdk-sql-mysql")
-    runtimeOnly("io.zipkin.brave:brave-instrumentation-mysql8")
-    runtimeOnly("org.apache.tomcat:tomcat-jdbc")
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.6.0")
-
     runtimeOnly("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-v2-instrumentor")
+}
+
+jib {
+    to {
+        image = "ghcr.io/anuraaga/otel-playground-frontend"
+    }
+    from {
+        image = "ghcr.io/anuraaga/aws-opentelemetry-java-base:alpha"
+    }
+    container {
+        environment = mapOf(
+                "OTEL_RESOURCE_ATTRIBUTE" to "service.name=OTTest",
+                "OTEL_ENDPOINT_PEER_SERVICE_MAPPING" to "4cz4hdh1wb.execute-api.us-west-2.amazonaws.com=lambda-service")
+    }
 }
