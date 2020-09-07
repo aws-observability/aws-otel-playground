@@ -19,7 +19,6 @@ service:
     traces:
       receivers:
       - otlp
-      - zipkin
       exporters:
       - logging
       - awsxray
