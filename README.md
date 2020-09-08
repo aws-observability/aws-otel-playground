@@ -30,3 +30,5 @@ on that page, in particular `AWS_REGION`.
 
 Note that the `dynamodb-table` is only to create the table once, so it is normal for it to exist after creating the table.
 
+If you see excessive deadline exceeded errors or the page doesn't respond properly, your Docker configuration may not have enough RAM.
+We recommend setting Docker to 4GB of RAM for a smooth experience.
