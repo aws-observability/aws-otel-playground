@@ -9,9 +9,7 @@ traces for the different types of instrumentation.
 Current instrumentation includes
 - OpenTelemetry Auto Instrumentation + OpenTelemetry Collector
 - X-Ray SDK Instrumentation + X-Ray Daemon
-  - Does not instrument gRPC
-- Zipkin Brave Instrumentation + OpenTelemetry Collector
-- Zipkin Brave Instrumentation + X-Ray Daemon
+  - Does not instrument many libraries like gRPC and Lettuce
 
 ## Running
 
