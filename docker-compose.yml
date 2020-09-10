@@ -89,7 +89,7 @@ services:
   backend:
     image: ghcr.io/anuraaga/otel-playground-backend
     environment:
-      - OTEL_OTLP_ENDPOINT=otel:9100
+      - OTEL_OTLP_ENDPOINT=otel:55680
       - IMDS_ENDPOINT=imds:1338
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
@@ -104,7 +104,7 @@ services:
   backend-webflux:
     image: ghcr.io/anuraaga/otel-playground-backend-webflux
     environment:
-      - OTEL_OTLP_ENDPOINT=otel:9100
+      - OTEL_OTLP_ENDPOINT=otel:55680
       - IMDS_ENDPOINT=imds:1338
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
       - CATS_CACHE_ENDPOINT=cats-cache:6379
@@ -126,7 +126,7 @@ services:
       - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - IMDS_ENDPOINT=imds:1338
-      - OTEL_OTLP_ENDPOINT=otel:9100
+      - OTEL_OTLP_ENDPOINT=otel:55680
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
@@ -157,7 +157,7 @@ services:
       - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - IMDS_ENDPOINT=imds:1338
-      - OTEL_OTLP_ENDPOINT=otel:9100
+      - OTEL_OTLP_ENDPOINT=otel:55680
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379

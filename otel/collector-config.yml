@@ -2,7 +2,6 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: 0.0.0.0:9100
 exporters:
   logging:
     loglevel: info
@@ -14,9 +13,15 @@ exporters:
   jaeger:
     endpoint: jaeger-server:14250
     insecure: true
+processors:
+  memory_limiter:
+    limit_mib: 100
+    check_interval: 5s
 service:
   pipelines:
     traces:
+      processors:
+      - memory_limiter
       receivers:
       - otlp
       exporters:
