@@ -131,7 +131,7 @@ services:
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
-      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=4cz4hdh1wb.execute-api.us-west-2.amazonaws.com=lambda-service,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache
+      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=3mrr1hl427.execute-api.us-west-2.amazonaws.com=hello-lambda-api,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/appdb
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
     ports:

@@ -13,10 +13,15 @@
  * permissions and limitations under the License.
  */
 
-include(":api")
-include(":appdb")
-include(":backend")
-include(":backend-webflux")
-include(":dependencyManagement")
-include(":frontend")
-include(":lambda-api")
+plugins {
+    `java-library`
+    id("com.github.johnrengelman.shadow") version "5.2.0"
+}
+
+dependencies {
+    implementation("com.amazonaws:aws-lambda-java-core")
+    implementation("com.amazonaws:aws-lambda-java-events")
+    implementation("org.apache.logging.log4j:log4j-core")
+
+    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl")
+}

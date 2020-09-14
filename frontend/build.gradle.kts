@@ -62,6 +62,6 @@ jib {
     container {
         environment = mapOf(
                 "OTEL_RESOURCE_ATTRIBUTE" to "service.name=OTTest",
-                "OTEL_ENDPOINT_PEER_SERVICE_MAPPING" to "4cz4hdh1wb.execute-api.us-west-2.amazonaws.com=lambda-service")
+                "OTEL_ENDPOINT_PEER_SERVICE_MAPPING" to "3mrr1hl427.execute-api.us-west-2.amazonaws.com=hello-lambda-api")
     }
 }

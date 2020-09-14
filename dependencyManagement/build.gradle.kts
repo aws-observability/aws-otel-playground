@@ -32,6 +32,16 @@ val DEPENDENCY_BOMS = listOf(
 
 val DEPENDENCY_SETS = listOf(
         DependencySet(
+                "com.amazonaws",
+                "1.2.1",
+                listOf("aws-lambda-java-core")
+        ),
+        DependencySet(
+                "com.amazonaws",
+                "3.2.0",
+                listOf("aws-lambda-java-events")
+        ),
+        DependencySet(
                 "io.lettuce",
                 "5.3.1.RELEASE",
                 listOf("lettuce-core")

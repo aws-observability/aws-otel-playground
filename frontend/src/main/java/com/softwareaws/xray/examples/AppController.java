@@ -134,8 +134,8 @@ public class AppController {
         }
 
         try {
-            apacheClient.execute(new HttpGet("https://4cz4hdh1wb.execute-api.us-west-2.amazonaws.com/ot-test/"))
-                        .getEntity().getContent().readAllBytes();
+            var lambdaResponse = apacheClient.execute(new HttpGet("https://3mrr1hl427.execute-api.us-west-2.amazonaws.com/default"));
+            lambdaResponse.getEntity().getContent().readAllBytes();
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from lambda API", e);
         }
