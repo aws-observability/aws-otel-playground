@@ -2,19 +2,27 @@ resource "aws_default_vpc" "default" {
 }
 
 resource "aws_default_subnet" "a" {
-  availability_zone = "us-west-2a"
+  availability_zone = "us-east-1a"
 }
 
 resource "aws_default_subnet" "b" {
-  availability_zone = "us-west-2b"
+  availability_zone = "us-east-1b"
 }
 
 resource "aws_default_subnet" "c" {
-  availability_zone = "us-west-2c"
+  availability_zone = "us-east-1c"
 }
 
 resource "aws_default_subnet" "d" {
-  availability_zone = "us-west-2d"
+  availability_zone = "us-east-1d"
+}
+
+resource "aws_default_subnet" "e" {
+  availability_zone = "us-east-1e"
+}
+
+resource "aws_default_subnet" "f" {
+  availability_zone = "us-east-1f"
 }
 
 resource "aws_security_group" "webservers" {

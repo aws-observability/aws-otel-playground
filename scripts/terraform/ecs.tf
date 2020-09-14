@@ -66,7 +66,7 @@ resource "aws_ecs_task_definition" "otel_backend" {
             "logDriver": "awslogs",
             "options": {
                 "awslogs-group": "${aws_cloudwatch_log_group.otel-playground.name}",
-                "awslogs-region": "us-west-2",
+                "awslogs-region": "${data.aws_region.current.name}",
                 "awslogs-stream-prefix": "backend"
             }
         }
@@ -92,7 +92,7 @@ resource "aws_ecs_task_definition" "otel_backend" {
             "logDriver": "awslogs",
             "options": {
                 "awslogs-group": "${aws_cloudwatch_log_group.otel-playground.name}",
-                "awslogs-region": "us-west-2",
+                "awslogs-region": "${data.aws_region.current.name}",
                 "awslogs-stream-prefix": "backend"
             }
         },
@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "otel_backend" {
             "logDriver": "awslogs",
             "options": {
                 "awslogs-group": "${aws_cloudwatch_log_group.otel-playground.name}",
-                "awslogs-region": "us-west-2",
+                "awslogs-region": "${data.aws_region.current.name}",
                 "awslogs-stream-prefix": "backend"
             }
         },

@@ -35,6 +35,20 @@ resource "aws_lambda_function" "lambda_api" {
   runtime = "java11"
   filename = "../../lambda-api/build/libs/lambda-api-all.jar"
   source_code_hash = filebase64sha256("../../lambda-api/build/libs/lambda-api-all.jar")
+  memory_size = 512
+  timeout = 120
+
+  environment {
+    variables = {
+      JAVA_TOOL_OPTIONS = "-javaagent:/opt/aws-opentelemetry-agent.jar -Dotel.bsp.schedule.delay=5 -Dotel.bsp.export.timeout=3600000 -Dio.opentelemetry.javaagent.slf4j.simpleLogger.defaultLogLevel=debug"
+    }
+  }
+
+  layers = [
+    aws_lambda_layer_version.aws_opentelemetry_javaagent.arn,
+    "arn:aws:lambda:us-east-1:886273918189:layer:goCollector:3"
+  ]
+
   tracing_config {
     mode = "Active"
   }

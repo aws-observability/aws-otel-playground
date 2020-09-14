@@ -1,7 +1,14 @@
 provider "aws" {
   version = "~> 3.0"
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "west"
   region = "us-west-2"
 }
+
+data "aws_region" "current" {}
 
 terraform {
   backend "s3" {
@@ -14,6 +21,7 @@ terraform {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
+  provider = aws.west
   bucket = "opentelemetry-playground-terraform-state"
 
   versioning {
@@ -22,6 +30,7 @@ resource "aws_s3_bucket" "terraform_state" {
 }
 
 resource "aws_dynamodb_table" "terraform_state_locks" {
+  provider = aws.west
   name = "opentelemetry-playground-terraform-state-locks"
   hash_key = "LockID"
   billing_mode = "PAY_PER_REQUEST"
