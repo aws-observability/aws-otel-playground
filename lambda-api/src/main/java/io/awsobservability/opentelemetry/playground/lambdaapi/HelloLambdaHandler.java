@@ -21,6 +21,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 
 public class HelloLambdaHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
@@ -33,7 +35,10 @@ public class HelloLambdaHandler implements RequestHandler<APIGatewayProxyRequest
                                    .stream()
                                    .map(e -> Map.entry("received-" + e.getKey(), e.getValue()))
                                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
-        response.setBody("I'm lambda!");
+        Throwable t = new Throwable();
+        StringWriter writer = new StringWriter();
+        t.printStackTrace(new PrintWriter(writer));
+        response.setBody("I'm lambda!\n" + writer.toString());
         return response;
     }
 }

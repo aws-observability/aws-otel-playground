@@ -35,23 +35,36 @@ resource "aws_lambda_function" "lambda_api" {
   runtime = "java11"
   filename = "../../lambda-api/build/libs/lambda-api-all.jar"
   source_code_hash = filebase64sha256("../../lambda-api/build/libs/lambda-api-all.jar")
-  memory_size = 512
+  memory_size = 384
   timeout = 120
+  publish = true
 
   environment {
     variables = {
-      JAVA_TOOL_OPTIONS = "-javaagent:/opt/aws-opentelemetry-agent.jar -Dotel.bsp.schedule.delay=5 -Dotel.bsp.export.timeout=3600000 -Dio.opentelemetry.javaagent.slf4j.simpleLogger.defaultLogLevel=debug"
+      JAVA_TOOL_OPTIONS = "-javaagent:/opt/aws-opentelemetry-agent.jar -Dotel.otlp.endpoint=localhost:55680 -Dotel.otlp.span.timeout=360000 -Dotel.bsp.schedule.delay=0 -Dotel.bsp.export.timeout=3600000 -Dio.opentelemetry.javaagent.slf4j.simpleLogger.defaultLogLevel=debug"
     }
   }
 
   layers = [
     aws_lambda_layer_version.aws_opentelemetry_javaagent.arn,
-    "arn:aws:lambda:us-east-1:886273918189:layer:goCollector:3"
+    "arn:aws:lambda:us-east-1:886273918189:layer:goCollector:4"
   ]
 
   tracing_config {
     mode = "Active"
   }
+}
+
+resource "aws_lambda_alias" "lambda_api" {
+  name = "lambda-api"
+  function_name = aws_lambda_function.lambda_api.function_name
+  function_version = aws_lambda_function.lambda_api.version
+}
+
+resource "aws_lambda_provisioned_concurrency_config" "lambda_api" {
+  function_name = aws_lambda_alias.lambda_api.function_name
+  provisioned_concurrent_executions = 2
+  qualifier = aws_lambda_alias.lambda_api.name
 }
 
 resource "aws_api_gateway_rest_api" "lambda_api" {
@@ -78,7 +91,7 @@ resource "aws_api_gateway_integration" "lambda_api" {
 
   integration_http_method = "POST"
   type = "AWS_PROXY"
-  uri = aws_lambda_function.lambda_api.invoke_arn
+  uri = aws_lambda_alias.lambda_api.invoke_arn
 }
 
 resource "aws_api_gateway_method" "lambda_api_proxy_root" {
@@ -95,7 +108,7 @@ resource "aws_api_gateway_integration" "lambda_api_root" {
 
   integration_http_method = "POST"
   type = "AWS_PROXY"
-  uri = aws_lambda_function.lambda_api.invoke_arn
+  uri = aws_lambda_alias.lambda_api.invoke_arn
 }
 
 resource "aws_api_gateway_deployment" "lambda_api" {

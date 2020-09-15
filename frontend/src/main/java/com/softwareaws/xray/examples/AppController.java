@@ -133,11 +133,13 @@ public class AppController {
             // Ignore. It should be in our trace though!
         }
 
-        try {
-            var lambdaResponse = apacheClient.execute(new HttpGet("https://tvyfrruhxh.execute-api.us-east-1.amazonaws.com/default"));
-            lambdaResponse.getEntity().getContent().readAllBytes();
-        } catch (IOException e) {
-            throw new UncheckedIOException("Could not fetch from lambda API", e);
+        for (int i = 0; i < 10; i++) {
+            try {
+                var lambdaResponse = apacheClient.execute(new HttpGet("https://tvyfrruhxh.execute-api.us-east-1.amazonaws.com/default"));
+                lambdaResponse.getEntity().getContent().readAllBytes();
+            } catch (IOException e) {
+                throw new UncheckedIOException("Could not fetch from lambda API", e);
+            }
         }
 
         Futures.getUnchecked(
