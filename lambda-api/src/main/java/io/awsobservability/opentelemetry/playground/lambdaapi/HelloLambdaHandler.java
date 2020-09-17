@@ -35,10 +35,10 @@ public class HelloLambdaHandler implements RequestHandler<APIGatewayProxyRequest
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
         var response = new APIGatewayProxyResponseEvent();
         response.setStatusCode(200);
-//        response.setHeaders(request.getHeaders().entrySet()
-//                                   .stream()
-//                                   .map(e -> Map.entry("received-" + e.getKey(), e.getValue()))
-//                                   .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        response.setHeaders(request.getHeaders().entrySet()
+                                   .stream()
+                                   .map(e -> Map.entry("received-" + e.getKey(), e.getValue()))
+                                   .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
 
         HttpClient httpclient = HttpClients.createDefault();
         for(int i = 0; i < 3; i++) {
