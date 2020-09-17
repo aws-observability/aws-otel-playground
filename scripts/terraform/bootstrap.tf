@@ -10,16 +10,6 @@ provider "aws" {
 
 data "aws_region" "current" {}
 
-terraform {
-  backend "s3" {
-    bucket = "opentelemetry-playground-terraform-state"
-    key    = "terraform.state"
-    region = "us-west-2"
-    encrypt = true
-    skip_metadata_api_check = true
-  }
-}
-
 resource "aws_s3_bucket" "terraform_state" {
   provider = aws.west
   bucket = "opentelemetry-playground-terraform-state"
