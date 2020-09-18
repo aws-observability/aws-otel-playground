@@ -7,6 +7,7 @@ exporters:
     loglevel: info
   awsxray:
     local_mode: true
+    no_verify_ssl: true
   zipkin:
     endpoint: "http://zipkin-server:9411/api/v2/spans"
     format: proto
