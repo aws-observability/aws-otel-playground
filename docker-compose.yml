@@ -66,8 +66,7 @@ services:
       - AWS_SECRET_ACCESS_KEY
       - AWS_REGION
     ports:
-      - '9100:9100'
-      - '9411:9411'
+      - '55680:55680'
     volumes:
       - ./otel:/config
       - ~/.aws:/root/.aws

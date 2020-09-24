@@ -42,6 +42,6 @@ jib {
         image = "ghcr.io/anuraaga/aws-opentelemetry-java-base:alpha"
     }
     container {
-        environment = mapOf("OTEL_RESOURCE_ATTRIBUTE" to "service.name=HelloService")
+        environment = mapOf("OTEL_RESOURCE_ATTRIBUTE" to "service.name=HelloService,cloud.provider=onprem")
     }
 }
