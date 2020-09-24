@@ -42,6 +42,16 @@ val DEPENDENCY_SETS = listOf(
                 listOf("aws-lambda-java-events")
         ),
         DependencySet(
+                "com.sparkjava",
+                "2.9.2",
+                listOf("spark-core")
+        ),
+        DependencySet(
+                "com.squareup.okhttp3",
+                "4.7.2",
+                listOf("okhttp")
+        ),
+        DependencySet(
                 "io.lettuce",
                 "5.3.1.RELEASE",
                 listOf("lettuce-core")
@@ -75,6 +85,36 @@ val DEPENDENCY_SETS = listOf(
                         "opentelemetry-sdk-metrics",
                         "opentelemetry-sdk-tracing"
                 )
+        ),
+        DependencySet(
+                "jakarta.annotation",
+                "1.3.5",
+                listOf("jakarta-annotation-api")
+        ),
+        DependencySet(
+                "org.apache.httpcomponents",
+                "4.5.12",
+                listOf("httpclient")
+        ),
+        DependencySet(
+                "org.apache.httpcomponents",
+                "4.1.4",
+                listOf("httpasyncclient")
+        ),
+        DependencySet(
+                "org.jooq",
+                "3.12.3",
+                listOf("jooq")
+        ),
+        DependencySet(
+                "org.mariadb.jdbc",
+                "2.6.0",
+                listOf("mariadb-java-client")
+        ),
+        DependencySet(
+                "mysql",
+                "8.0.20",
+                listOf("mysql-connector-java")
         )
 )
 

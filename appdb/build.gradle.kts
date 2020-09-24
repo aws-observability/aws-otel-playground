@@ -21,9 +21,9 @@ plugins {
 }
 
 dependencies {
-    api("org.jooq:jooq:3.12.3")
+    api("org.jooq:jooq")
 
-    jooqGeneratorRuntime("org.mariadb.jdbc:mariadb-java-client:2.6.0")
+    jooqGeneratorRuntime("org.mariadb.jdbc:mariadb-java-client")
 }
 
 jooqGenerator {

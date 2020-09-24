@@ -26,7 +26,7 @@ application {
 dependencies {
     implementation(project(":api"))
 
-    implementation("com.sparkjava:spark-core:2.9.2")
+    implementation("com.sparkjava:spark-core")
     implementation("io.grpc:grpc-netty-shaded")
     implementation("org.apache.logging.log4j:log4j-core")
 

@@ -48,7 +48,7 @@ dependencies {
     implementation("com.amazonaws:aws-lambda-java-core")
     implementation("com.amazonaws:aws-lambda-java-events")
     implementation("org.apache.logging.log4j:log4j-core")
-    implementation("org.apache.httpcomponents:httpclient:4.5.12")
+    implementation("org.apache.httpcomponents:httpclient")
     implementation("commons-logging:commons-logging:1.1.1")
 
     runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl")
