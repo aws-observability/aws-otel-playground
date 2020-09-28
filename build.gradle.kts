@@ -36,6 +36,10 @@ tasks.named<Wrapper>("wrapper") {
     distributionSha256Sum = "11657af6356b7587bfb37287b5992e94a9686d5c8a0a1b60b87b9928a2decde5"
 }
 
+licenseReport {
+    renderers = arrayOf(InventoryMarkdownReportRenderer())
+}
+
 tasks {
     val cleanLicenses by registering(Delete::class) {
         delete("licenses")
