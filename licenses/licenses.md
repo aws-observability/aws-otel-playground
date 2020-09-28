@@ -1,7 +1,7 @@
 
 #aws-xray-sdk-with-opentelemetry-sample
 ##Dependency License Report
-_2020-09-28 15:27:54 JST_
+_2020-09-28 15:29:21 JST_
 ## 3-Clause BSD License
 
 **1** **Group:** `com.google.protobuf` **Name:** `protobuf-java` **Version:** `3.11.0` 
@@ -1104,23 +1104,5 @@ _2020-09-28 15:27:54 JST_
 > - **POM Project URL**: [https://checkerframework.org](https://checkerframework.org)
 > - **POM License**: GNU General Public License, version 2 (GPL2), with the classpath exception - [http://www.gnu.org/software/classpath/license.html](http://www.gnu.org/software/classpath/license.html)
 > - **POM License**: The MIT License - [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
-
-## Unknown
-
-**200** **Group:** `com.amazonaws` **Name:** `aws-xray-recorder-sdk-bom` **Version:** `2.6.1` 
-
-**201** **Group:** `com.fasterxml.jackson` **Name:** `jackson-bom` **Version:** `2.11.0` 
-
-**202** **Group:** `io.grpc` **Name:** `grpc-bom` **Version:** `1.29.0` 
-
-**203** **Group:** `io.zipkin.brave` **Name:** `brave-bom` **Version:** `5.12.3` 
-
-**204** **Group:** `io.zipkin.reporter2` **Name:** `zipkin-reporter-bom` **Version:** `2.15.0` 
-
-**205** **Group:** `org.apache.logging.log4j` **Name:** `log4j-bom` **Version:** `2.13.3` 
-
-**206** **Group:** `org.springframework.boot` **Name:** `spring-boot-dependencies` **Version:** `2.2.7.RELEASE` 
-
-**207** **Group:** `software.amazon.awssdk` **Name:** `bom` **Version:** `2.13.17` 
 
 
