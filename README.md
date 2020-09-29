@@ -78,3 +78,7 @@ configuration though.
 If you have AWS credentials configured and both apps running on localhost, you will see traces in X-Ray if you issue any
 requests. If the collector cannot be accessed via localhost (e.g., in docker-compose), you may need to set the endpoint when
 starting your Java application using the `OTEL_OTLP_ENDPOINT` environment variable.
+
+# License
+
+This project is licensed under the MIT No Attribution License.
