@@ -164,7 +164,7 @@ public class AppController {
         catsCache.sync().set("garfield", "fat");
         dogsCache.sync().set("odie", "funny");
 
-        String traceId = TracingContextUtils.getCurrentSpan().getContext().getTraceId().toLowerBase16();
+        String traceId = TracingContextUtils.getCurrentSpan().getContext().getTraceIdAsHexString();
         return "<html><body>"
                + selfResponseContent + "<br>" + response.getGreeting() + "<br>" + randomPlanet + "<br>" + "Find the traces:<br>"
                + "<a target=\"_blank\" href=\"https://" + AWS_REGION + ".console.aws.amazon.com/xray/home?region=" + AWS_REGION + "#/traces?timeRange=PT1M\">XRay</a>"

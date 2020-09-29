@@ -111,7 +111,7 @@ public class Application {
     public static void main(String[] args) throws Exception {
         if (ENABLE_XRAY_SDK) {
             // Can't use X-Ray propagation with OpenTelemetry if X-Ray SDK is enabled or they would collide.
-            OpenTelemetry.setPropagators(DefaultContextPropagators.builder().addTextMapPropagator(new HttpTraceContext()).build());
+            OpenTelemetry.setPropagators(DefaultContextPropagators.builder().addTextMapPropagator(HttpTraceContext.getInstance()).build());
         } else {
             AWSXRay.getGlobalRecorder().setContextMissingStrategy(new IgnoreErrorContextMissingStrategy());
         }

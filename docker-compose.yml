@@ -62,14 +62,14 @@ services:
     image: otel/opentelemetry-collector-contrib-dev
     command: --config /config/collector-config.yml --log-level debug
     environment:
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
+      #- AWS_ACCESS_KEY_ID
+      #- AWS_SECRET_ACCESS_KEY
       - AWS_REGION
     ports:
       - '55680:55680'
     volumes:
       - ./otel:/config
-      - ~/.aws:/root/.aws
+      - ~/.aws:/.aws
     depends_on:
       - zipkin-server
       - jaeger-server
@@ -88,7 +88,7 @@ services:
   backend:
     image: ghcr.io/anuraaga/otel-playground-backend
     environment:
-      - OTEL_OTLP_ENDPOINT=otel:55680
+      - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
       - IMDS_ENDPOINT=imds:1338
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
@@ -103,7 +103,7 @@ services:
   backend-webflux:
     image: ghcr.io/anuraaga/otel-playground-backend-webflux
     environment:
-      - OTEL_OTLP_ENDPOINT=otel:55680
+      - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
       - IMDS_ENDPOINT=imds:1338
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
       - CATS_CACHE_ENDPOINT=cats-cache:6379
@@ -125,7 +125,7 @@ services:
       - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - IMDS_ENDPOINT=imds:1338
-      - OTEL_OTLP_ENDPOINT=otel:55680
+      - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
@@ -156,7 +156,7 @@ services:
       - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - IMDS_ENDPOINT=imds:1338
-      - OTEL_OTLP_ENDPOINT=otel:55680
+      - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
