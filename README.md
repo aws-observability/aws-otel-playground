@@ -35,7 +35,7 @@ We recommend setting Docker to 4GB of RAM for a smooth experience.
 
 The playground is composed of two observability components in addition to the business logic actually being monitored.
 
-- [AWS OpenTelemetry Java Agent](https://github.com/anuraaga/aws-opentelemetry-java-instrumentation)
+- [OpenTelemetry Java Agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
 - [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-contrib)
 
 The recommended way to get started for your app is to run the Docker image for the collector from [here](https://hub.docker.com/r/otel/opentelemetry-collector-contrib-dev).
@@ -70,10 +70,6 @@ service:
       - awsxray
       # Feel free to add more exporters if you use e.g., Zipkin, Jaeger
 ```
-
-For your Java application, download an agent binary from the [releases](https://github.com/anuraaga/aws-opentelemetry-java-instrumentation/releases).
-See the README there for more information on detailed configuration information, to get started you should not need any
-configuration though.
 
 If you have AWS credentials configured and both apps running on localhost, you will see traces in X-Ray if you issue any
 requests. If the collector cannot be accessed via localhost (e.g., in docker-compose), you may need to set the endpoint when
