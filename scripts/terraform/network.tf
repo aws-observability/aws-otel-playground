@@ -72,6 +72,11 @@ resource "aws_security_group" "webbackends" {
   }
 }
 
+data "aws_security_group" "default" {
+  name   = "default"
+  vpc_id = module.vpc.vpc_id
+}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
   version = "~> 2.51.0"
@@ -102,6 +107,11 @@ module "vpc" {
 
   enable_nat_gateway = true
   single_nat_gateway = true
+
+  enable_sts_endpoint = true
+  sts_endpoint_security_group_ids = [
+    data.aws_security_group.default.id
+  ]
 
   public_subnet_tags = {
     "kubernetes.io/cluster/opentelemetry-playground": "shared"

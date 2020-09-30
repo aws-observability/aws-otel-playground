@@ -155,6 +155,20 @@ public class AppController {
             throw new UncheckedIOException("Could not fetch from self.", e);
         }
 
+        try (Response ecsResponse = httpClient.newCall(
+            new Request.Builder().url("http://ecs-backend-2093777359.us-east-1.elb.amazonaws.com/hellospark").build()).execute()) {
+
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not fetch from ECS.", e);
+        }
+
+        try (Response eksResponse = httpClient.newCall(
+            new Request.Builder().url("http://2ccd810c-fargate-backend-8661-784022251.us-east-1.elb.amazonaws.com/hellospark").build()).execute()) {
+
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not fetch from ECS.", e);
+        }
+
         try (Response sparkResponse =
                  httpClient.newCall(new Request.Builder().url("http://" + SPARK_BACKEND_ENDPOINT + "/hellospark").build()).execute()) {
         } catch (IOException e) {

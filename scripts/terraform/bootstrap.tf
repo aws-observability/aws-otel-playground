@@ -8,6 +8,10 @@ provider "aws" {
   region = "us-west-2"
 }
 
+provider "tls" {
+  version = "~> 2.2.0"
+}
+
 data "aws_region" "current" {}
 
 resource "aws_s3_bucket" "terraform_state" {

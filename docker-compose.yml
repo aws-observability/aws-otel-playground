@@ -89,9 +89,7 @@ services:
     image: ghcr.io/anuraaga/otel-playground-backend
     environment:
       - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
-      - IMDS_ENDPOINT=imds:1338
       - AWS_XRAY_DAEMON_ADDRESS=xray:2000
-      - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
     ports:
       - '8081:8081'
       - '8083:8083'
@@ -130,7 +128,7 @@ services:
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
-      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=tvyfrruhxh.execute-api.us-east-1.amazonaws.com=hello-lambda-api,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache
+      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=tvyfrruhxh.execute-api.us-east-1.amazonaws.com=hello-lambda-api,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache,ecs-backend-2093777359.us-east-1.elb.amazonaws.com=ecs-backend,2ccd810c-fargate-backend-8661-784022251.us-east-1.elb.amazonaws.com=eks-backend
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/appdb
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
     ports:
