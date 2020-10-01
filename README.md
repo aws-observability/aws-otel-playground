@@ -19,6 +19,8 @@ To set up AWS resources you will need Terraform, available [here](https://www.te
 
 First, make sure your have configured AWS credentials using the AWS CLI as described [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html).
 
+Then, run `./gradlew build` from root location to build the complete package
+
 Then, navigate to the scripts/terraform directory and run
 
 ```
@@ -66,7 +68,7 @@ and then rerun docker-compose.
 
 ## Cleaning up
 
-If you provisioned AWS resources above, run `terraform deploy` to clean them up.
+If you provisioned AWS resources above, run `terraform destroy` to clean them up.
 
 ## How it works
 
