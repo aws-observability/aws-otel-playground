@@ -21,10 +21,10 @@ First, make sure your have configured AWS credentials using the AWS CLI as descr
 
 You must also have [Java 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) installed to build the project.
 
-From the root of the repository, run
+From the root of the repository, to prepare the lambda deployment, run
 
 ```
-$ ./gradlew build
+$ ./gradlew :lambda-api:build
 ```
 
 Then, navigate to the `scripts/terraform` directory and run
