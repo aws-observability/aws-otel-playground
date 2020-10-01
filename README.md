@@ -58,6 +58,12 @@ Note that the `dynamodb-table` is only to create the table once, so it is normal
 If you see excessive deadline exceeded errors or the page doesn't respond properly, your Docker configuration may not have enough RAM.
 We recommend setting Docker to 4GB of RAM for a smooth experience.
 
+If you make any code edits you would like to try out, first rebuild the Docker images locally.
+
+`./gradlew jibDockerBuild`
+
+and then rerun docker-compose.
+
 ## Cleaning up
 
 If you provisioned AWS resources above, run `terraform deploy` to clean them up.
