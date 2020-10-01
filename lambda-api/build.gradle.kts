@@ -9,7 +9,7 @@ plugins {
 tasks {
 
     val downloadAgent by registering(Download::class) {
-        src("https://github.com/anuraaga/aws-opentelemetry-java-instrumentation/releases/download/v0.9.0-alpha.1/aws-opentelemetry-agent.jar")
+        src("https://github.com/anuraaga/aws-opentelemetry-java-instrumentation/releases/download/v0.9.0-alpha.2/aws-opentelemetry-agent.jar")
         dest("$buildDir/layers/javaagent/aws-opentelemetry-agent.jar")
         onlyIfModified(true)
     }

@@ -47,7 +47,7 @@ resource "aws_lambda_function" "lambda_api" {
 
   layers = [
     aws_lambda_layer_version.aws_opentelemetry_javaagent.arn,
-    "arn:aws:lambda:us-east-1:886273918189:layer:goCollector:4"
+    "arn:aws:lambda:us-east-1:886273918189:layer:my-aoc-layer:5"
   ]
 
   tracing_config {
@@ -129,7 +129,11 @@ resource "aws_api_gateway_stage" "test" {
 
 resource "aws_lambda_permission" "lambda_api_allow_gateway" {
   action = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_api.arn
+  function_name = aws_lambda_alias.lambda_api.function_name
   principal = "apigateway.amazonaws.com"
-  source_arn = "${aws_api_gateway_rest_api.lambda_api.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_rest_api.lambda_api.execution_arn}/*/*/*"
+}
+
+output "lambda_api_gateway_url" {
+  value = aws_api_gateway_stage.test.invoke_url
 }

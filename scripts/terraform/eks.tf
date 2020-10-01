@@ -377,3 +377,7 @@ resource "kubernetes_ingress" "fargate_ingress" {
     module.alb_ingress_controller
   ]
 }
+
+output "eks_fargate_url" {
+  value = kubernetes_ingress.fargate_ingress.load_balancer_ingress[0].hostname
+}

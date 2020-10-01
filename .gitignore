@@ -43,3 +43,5 @@ dataSources
 atlassian-ide-plugin.xml
 
 .terraform
+terraform.tfstate
+terraform.tfstate.*

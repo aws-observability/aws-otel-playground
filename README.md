@@ -11,6 +11,33 @@ Current instrumentation includes
 - X-Ray SDK Instrumentation + X-Ray Daemon
   - Does not instrument many libraries like gRPC and Lettuce
 
+## Setting up AWS resources
+
+The playground access various endpoints hosted on AWS. Feel free to skip this section to just see traces with local endpoints.
+
+To set up AWS resources you will need Terraform, available [here](https://www.terraform.io/downloads.html).
+
+First, make sure your have configured AWS credentials using the AWS CLI as described [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html).
+
+Then, navigate to the scripts/terraform directory and run
+
+```
+$ terraform init
+$ terraform apply
+```
+
+This will take some time as it provisions resources. Note that this also generates `terraform.tfstate` files in the
+same directory. DO NOT LOSE THESE - without these files, Terraform will not be able to cleanup after you are done with the
+resources.
+
+After it completes, three output values will be printed. Open `docker-compose.yml` and find the four values under `#AWS Provisioned resources`
+Change the values so
+
+- `API_GATEWAY_ENDPOINT` is set to the output value `lambda_api_gateway_url`
+- `ECS_ENDPOINT` is set to the output value `ecs_url`
+- `EKS_ENDPOINT` is set to the output value `eks_fargate_url`
+- `OTEL_ENDPOINT_PEER_SERVICE_MAPPING` - replace the keys for hello-lambda-api, ecs-backend, eks-backend to the domains for these three values
+
 ## Running
 
 Make sure Docker is installed and run
@@ -30,6 +57,10 @@ Note that the `dynamodb-table` is only to create the table once, so it is normal
 
 If you see excessive deadline exceeded errors or the page doesn't respond properly, your Docker configuration may not have enough RAM.
 We recommend setting Docker to 4GB of RAM for a smooth experience.
+
+## Cleaning up
+
+If you provisioned AWS resources above, run `terraform deploy` to clean them up.
 
 ## How it works
 

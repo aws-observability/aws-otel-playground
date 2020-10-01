@@ -33,6 +33,10 @@ resource "aws_ecs_cluster" "otel_playground" {
     name = "containerInsights"
     value = "enabled"
   }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy
+  ]
 }
 
 resource "aws_iam_role" "ecs_backend" {
@@ -200,4 +204,8 @@ resource "aws_ecs_service" "otel_backend" {
     ]
     assign_public_ip = true
   }
+}
+
+output "ecs_url" {
+  value = aws_lb.ecs_backend.dns_name
 }

@@ -64,7 +64,7 @@ services:
     environment:
       #- AWS_ACCESS_KEY_ID
       #- AWS_SECRET_ACCESS_KEY
-      - AWS_REGION
+      - AWS_REGION=us-east-1
     ports:
       - '55680:55680'
     volumes:
@@ -73,23 +73,10 @@ services:
     depends_on:
       - zipkin-server
       - jaeger-server
-  xray:
-    image: amazon/aws-xray-daemon:3.2.0
-    command: -o
-    environment:
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_REGION
-    ports:
-      - '2000:2000/udp'
-      - '2000:2000/tcp'
-    volumes:
-      - ~/.aws:/root/.aws
   backend:
     image: ghcr.io/anuraaga/otel-playground-backend
     environment:
       - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
-      - AWS_XRAY_DAEMON_ADDRESS=xray:2000
     ports:
       - '8081:8081'
       - '8083:8083'
@@ -97,7 +84,6 @@ services:
       - imds
       - mysqldb
       - otel
-      - xray
   backend-webflux:
     image: ghcr.io/anuraaga/otel-playground-backend-webflux
     environment:
@@ -112,25 +98,28 @@ services:
       - imds
       - mysqldb
       - otel
-      - xray
   frontend:
     image: ghcr.io/anuraaga/otel-playground-frontend
     environment:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
-      - AWS_REGION
+      - AWS_REGION=us-east-1
       - HELLO_SERVICE_ENDPOINT=backend:8081
       - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - IMDS_ENDPOINT=imds:1338
       - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
-      - AWS_XRAY_DAEMON_ADDRESS=xray:2000
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
-      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=tvyfrruhxh.execute-api.us-east-1.amazonaws.com=hello-lambda-api,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache,ecs-backend-2093777359.us-east-1.elb.amazonaws.com=ecs-backend,2ccd810c-fargate-backend-8661-784022251.us-east-1.elb.amazonaws.com=eks-backend
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/appdb
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
+
+      # AWS Provisioned resources
+      - API_GATEWAY_ENDPOINT=https://a7h1i2m1bk.execute-api.us-east-1.amazonaws.com/default
+      - ECS_ENDPOINT=ecs-backend-1287231310.us-east-1.elb.amazonaws.com
+      - EKS_ENDPOINT=2ccd810c-fargate-backend-8661-1530997741.us-east-1.elb.amazonaws.com
+      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=a7h1i2m1bk.execute-api.us-east-1.amazonaws.com=hello-lambda-api,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache,ecs-backend-1287231310.us-east-1.elb.amazonaws.com=ecs-backend,2ccd810c-fargate-backend-8661-1530997741.us-east-1.elb.amazonaws.com=eks-backend
     ports:
       - '9080:9080'
     volumes:
@@ -143,37 +132,3 @@ services:
       - cats-cache
       - dogs-cache
       - otel
-      - xray
-  frontend_xray:
-    image: ghcr.io/anuraaga/otel-playground-frontend
-    environment:
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_REGION
-      - HELLO_SERVICE_ENDPOINT=backend:8081
-      - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
-      - SPARK_BACKEND_ENDPOINT=backend:8083
-      - IMDS_ENDPOINT=imds:1338
-      - OTEL_EXPORTER_OTLP_SPAN_ENDPOINT=otel:55680
-      - AWS_XRAY_DAEMON_ADDRESS=xray:2000
-      - DYNAMODB_ENDPOINT=dynamodb:8000
-      - CATS_CACHE_ENDPOINT=cats-cache:6379
-      - DOGS_CACHE_ENDPOINT=dogs-cache:6379
-      - ENABLE_XRAY_SDK=true
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/appdb
-      - OTEL_PROPAGATORS=tracecontext
-      - SERVER_PORT=9081
-      - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
-    ports:
-      - '9081:9081'
-    volumes:
-      - ~/.aws:/root/.aws
-    depends_on:
-      - backend
-      - dynamodb-table
-      - imds
-      - mysqldb
-      - cats-cache
-      - dogs-cache
-      - otel
-      - xray
