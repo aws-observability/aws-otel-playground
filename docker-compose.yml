@@ -116,10 +116,10 @@ services:
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
 
       # AWS Provisioned resources
-      - API_GATEWAY_ENDPOINT=https://a7h1i2m1bk.execute-api.us-east-1.amazonaws.com/default
-      - ECS_ENDPOINT=ecs-backend-1287231310.us-east-1.elb.amazonaws.com
+      - API_GATEWAY_ENDPOINT=https://a3iska8nwh.execute-api.us-east-1.amazonaws.com/default
+      - ECS_ENDPOINT=ecs-backend-37231057.us-east-1.elb.amazonaws.com
       - EKS_ENDPOINT=2ccd810c-fargate-backend-8661-1530997741.us-east-1.elb.amazonaws.com
-      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=a7h1i2m1bk.execute-api.us-east-1.amazonaws.com=hello-lambda-api,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache,ecs-backend-1287231310.us-east-1.elb.amazonaws.com=ecs-backend,2ccd810c-fargate-backend-8661-1530997741.us-east-1.elb.amazonaws.com=eks-backend
+      - OTEL_ENDPOINT_PEER_SERVICE_MAPPING=a3iska8nwh.execute-api.us-east-1.amazonaws.com=hello-lambda-api,cats-cache:6379=cats-cache,dogs-cache:6379=dogs-cache,ecs-backend-37231057.us-east-1.elb.amazonaws.com=ecs-backend,2ccd810c-fargate-backend-8661-1530997741.us-east-1.elb.amazonaws.com=eks-backend
     ports:
       - '9080:9080'
     volumes:
