@@ -45,7 +45,7 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "io.opentelemetry",
-                "0.9.0-20200925.025016-49",
+                "0.9.1",
                 listOf(
                         "opentelemetry-api",
                         "opentelemetry-exporters-logging",
@@ -54,7 +54,7 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "io.opentelemetry",
-                "0.9.0-20200925.025016-49",
+                "0.9.1",
                 listOf(
                         "opentelemetry-context-prop",
                         "opentelemetry-extension-trace-propagators",
@@ -65,7 +65,7 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "io.opentelemetry",
-                "0.9.0-20200925.025016-49",
+                "0.9.1",
                 listOf(
                         "opentelemetry-sdk-common",
                         "opentelemetry-sdk-correlation-context",
