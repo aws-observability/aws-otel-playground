@@ -62,8 +62,8 @@ services:
     image: otel/opentelemetry-collector-contrib-dev
     command: --config /config/collector-config.yml --log-level debug
     environment:
-      #- AWS_ACCESS_KEY_ID
-      #- AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
       - AWS_REGION=us-east-1
     ports:
       - '55680:55680'
