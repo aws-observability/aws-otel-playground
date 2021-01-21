@@ -74,6 +74,12 @@ services:
     depends_on:
       - zipkin-server
       - jaeger-server
+  go-gorilla:
+    image: public.ecr.aws/u0d6r4y4/aws-otel-go-test-gorilla:0
+    environment:
+      - LISTEN_ADDRESS=0.0.0.0:8080
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=go-gorilla
   backend:
     image: public.ecr.aws/o2z1k4j2/aws-otel-playground:backend
     environment:
@@ -108,6 +114,7 @@ services:
       - HELLO_SERVICE_ENDPOINT=backend:8081
       - WEBFLUX_BACKEND_ENDPOINT=backend-webflux:8082
       - SPARK_BACKEND_ENDPOINT=backend:8083
+      - GO_GORILLA_BACKEND_ENDPOINT=go-gorilla:8080
       - IMDS_ENDPOINT=imds:1338
       - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
       - DYNAMODB_ENDPOINT=dynamodb:8000

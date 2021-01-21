@@ -43,6 +43,7 @@ public class AppController {
 
     private static final String WEBFLUX_BACKEND_ENDPOINT = System.getenv().getOrDefault("WEBFLUX_BACKEND_ENDPOINT", "localhost:8082");
     private static final String SPARK_BACKEND_ENDPOINT = System.getenv().getOrDefault("SPARK_BACKEND_ENDPOINT", "localhost:8083");
+    private static final String GO_GORILLA_BACKEND_ENDPOINT = System.getenv().getOrDefault("GO_GORILLA_BACKEND_ENDPOINT", "localhost:8084");
 
     private static final String API_GATEWAY_ENDPOINT = System.getenv().getOrDefault("API_GATEWAY_ENDPOINT", "tvyfrruhxh.execute-api.us-east-1.amazonaws.com");
     private static final String ECS_ENDPOINT = System.getenv().getOrDefault("ECS_ENDPOINT", "ecs-backend-2093777359.us-east-1.elb.amazonaws.com");
@@ -174,7 +175,13 @@ public class AppController {
         }
 
         try (Response sparkResponse =
-                 httpClient.newCall(new Request.Builder().url("http://" + SPARK_BACKEND_ENDPOINT + "/hellospark").build()).execute()) {
+            httpClient.newCall(new Request.Builder().url("http://" + SPARK_BACKEND_ENDPOINT + "/hellospark").build()).execute()) {
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not fetch from spark.", e);
+        }
+
+        try (Response unused =
+            httpClient.newCall(new Request.Builder().url("http://" + GO_GORILLA_BACKEND_ENDPOINT + "/outgoing-http-call").build()).execute()) {
         } catch (IOException e) {
             throw new UncheckedIOException("Could not fetch from spark.", e);
         }

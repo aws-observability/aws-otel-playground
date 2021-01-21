@@ -6,6 +6,8 @@ exporters:
   logging:
     loglevel: info
   awsxray:
+  prometheus:
+    endpoint: 0.0.0.0:9090
   zipkin:
     endpoint: "http://zipkin-server:9411/api/v2/spans"
     format: proto
@@ -19,8 +21,6 @@ processors:
 service:
   pipelines:
     traces:
-      processors:
-      - memory_limiter
       receivers:
       - otlp
       exporters:
@@ -28,3 +28,8 @@ service:
       - awsxray
       - zipkin
       - jaeger
+    metrics:
+      receivers:
+      - otlp
+      exporters:
+      - prometheus
