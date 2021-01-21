@@ -55,7 +55,7 @@ resource "aws_ecs_task_definition" "otel_backend" {
   [
     {
         "cpu": 200,
-        "image": "ghcr.io/anuraaga/otel-playground-backend",
+        "image": "public.ecr.aws/o2z1k4j2/aws-otel-playground:backend",
         "memory": 384,
         "name": "backend",
         "portMappings": [

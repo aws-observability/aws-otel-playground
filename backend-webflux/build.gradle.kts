@@ -22,7 +22,7 @@ jib {
         image = "public.ecr.aws/o2z1k4j2/aws-otel-playground:backend-webflux"
     }
     from {
-        image = "ghcr.io/anuraaga/aws-opentelemetry-java-base:alpha"
+        image = "public.ecr.aws/u0d6r4y4/aws-opentelemetry-java-base:alpha"
     }
     container {
         environment = mapOf("OTEL_RESOURCE_ATTRIBUTE" to "service.name=WebfluxBackend")

@@ -40,7 +40,7 @@ jib {
         image = "public.ecr.aws/o2z1k4j2/aws-otel-playground:frontend"
     }
     from {
-        image = "ghcr.io/anuraaga/aws-opentelemetry-java-base:alpha"
+        image = "public.ecr.aws/u0d6r4y4/aws-opentelemetry-java-base:alpha"
     }
     container {
         environment = mapOf(

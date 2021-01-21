@@ -246,7 +246,7 @@ resource "kubernetes_deployment" "fargate_backend" {
       spec {
         container {
           name = "backend"
-          image = "ghcr.io/anuraaga/otel-playground-backend"
+          image = "public.ecr.aws/o2z1k4j2/aws-otel-playground:backend"
           image_pull_policy = "Always"
 
           readiness_probe {
