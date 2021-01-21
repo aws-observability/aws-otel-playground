@@ -21,7 +21,7 @@ dependencies {
 
 jib {
     to {
-        image = "ghcr.io/anuraaga/otel-playground-backend"
+        image = "public.ecr.aws/o2z1k4j2/aws-otel-playground:backend"
     }
     from {
         image = "ghcr.io/anuraaga/aws-opentelemetry-java-base:alpha"

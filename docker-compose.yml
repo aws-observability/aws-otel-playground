@@ -66,6 +66,7 @@ services:
       - AWS_SECRET_ACCESS_KEY
       - AWS_REGION=us-east-1
     ports:
+      - '4317:4317'
       - '55680:55680'
     volumes:
       - ./otel:/config
@@ -74,7 +75,7 @@ services:
       - zipkin-server
       - jaeger-server
   backend:
-    image: ghcr.io/anuraaga/otel-playground-backend
+    image: public.ecr.aws/o2z1k4j2/aws-otel-playground:backend
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
     ports:
@@ -85,7 +86,7 @@ services:
       - mysqldb
       - otel
   backend-webflux:
-    image: ghcr.io/anuraaga/otel-playground-backend-webflux
+    image: public.ecr.aws/o2z1k4j2/aws-otel-playground:backend-webflux
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
       - IMDS_ENDPOINT=imds:1338
@@ -99,7 +100,7 @@ services:
       - mysqldb
       - otel
   frontend:
-    image: ghcr.io/anuraaga/otel-playground-frontend
+    image: public.ecr.aws/o2z1k4j2/aws-otel-playground:frontend
     environment:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
