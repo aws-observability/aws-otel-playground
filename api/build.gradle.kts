@@ -3,16 +3,16 @@ import com.google.protobuf.gradle.*
 plugins {
     `java-library`
     idea
-    id("com.google.protobuf") version "0.8.12"
+    id("com.google.protobuf")
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.12.0"
+        artifact = "com.google.protobuf:protoc:3.14.0"
     }
     plugins {
         id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.29.0"
+            artifact = "io.grpc:protoc-gen-grpc-java:1.35.0"
         }
     }
     generateProtoTasks {

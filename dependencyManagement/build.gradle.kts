@@ -7,14 +7,15 @@ plugins {
 data class DependencySet(val group: String, val version: String, val modules: List<String>)
 
 val DEPENDENCY_BOMS = listOf(
-        "com.amazonaws:aws-xray-recorder-sdk-bom:2.6.1",
-        "com.fasterxml.jackson:jackson-bom:2.11.0",
-        "io.grpc:grpc-bom:1.29.0",
-        "io.zipkin.brave:brave-bom:5.12.3",
-        "io.zipkin.reporter2:zipkin-reporter-bom:2.15.0",
-        "org.apache.logging.log4j:log4j-bom:2.13.3",
-        "org.springframework.boot:spring-boot-dependencies:2.2.7.RELEASE",
-        "software.amazon.awssdk:bom:2.13.17"
+        "com.amazonaws:aws-xray-recorder-sdk-bom:2.8.0",
+        "com.fasterxml.jackson:jackson-bom:2.12.1",
+        "io.grpc:grpc-bom:1.35.0",
+        "io.opentelemetry:opentelemetry-bom:0.14.1",
+        "io.zipkin.brave:brave-bom:5.13.3",
+        "io.zipkin.reporter2:zipkin-reporter-bom:2.16.3",
+        "org.apache.logging.log4j:log4j-bom:2.14.0",
+        "org.springframework.boot:spring-boot-dependencies:2.4.2",
+        "software.amazon.awssdk:bom:2.15.67"
 )
 
 val DEPENDENCY_SETS = listOf(
@@ -25,53 +26,23 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "com.amazonaws",
-                "3.2.0",
+                "3.7.0",
                 listOf("aws-lambda-java-events")
         ),
         DependencySet(
                 "com.sparkjava",
-                "2.9.2",
+                "2.9.3",
                 listOf("spark-core")
         ),
         DependencySet(
                 "com.squareup.okhttp3",
-                "4.7.2",
+                "4.9.0",
                 listOf("okhttp")
         ),
         DependencySet(
                 "io.lettuce",
-                "5.3.1.RELEASE",
+                "6.0.2.RELEASE",
                 listOf("lettuce-core")
-        ),
-        DependencySet(
-                "io.opentelemetry",
-                "0.9.1",
-                listOf(
-                        "opentelemetry-api",
-                        "opentelemetry-exporters-logging",
-                        "opentelemetry-exporters-otlp"
-                )
-        ),
-        DependencySet(
-                "io.opentelemetry",
-                "0.9.1",
-                listOf(
-                        "opentelemetry-context-prop",
-                        "opentelemetry-extension-trace-propagators",
-                        "opentelemetry-proto",
-                        "opentelemetry-sdk",
-                        "opentelemetry-sdk-extension-aws-v1-support"
-                )
-        ),
-        DependencySet(
-                "io.opentelemetry",
-                "0.9.1",
-                listOf(
-                        "opentelemetry-sdk-common",
-                        "opentelemetry-sdk-correlation-context",
-                        "opentelemetry-sdk-metrics",
-                        "opentelemetry-sdk-tracing"
-                )
         ),
         DependencySet(
                 "jakarta.annotation",
@@ -80,7 +51,7 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "org.apache.httpcomponents",
-                "4.5.12",
+                "4.5.13",
                 listOf("httpclient")
         ),
         DependencySet(
@@ -95,12 +66,12 @@ val DEPENDENCY_SETS = listOf(
         ),
         DependencySet(
                 "org.mariadb.jdbc",
-                "2.6.0",
+                "2.7.1",
                 listOf("mariadb-java-client")
         ),
         DependencySet(
                 "mysql",
-                "8.0.20",
+                "8.0.23",
                 listOf("mysql-connector-java")
         )
 )

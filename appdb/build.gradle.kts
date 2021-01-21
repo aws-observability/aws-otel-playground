@@ -2,7 +2,7 @@ import com.rohanprabhu.gradle.plugins.kdjooq.*
 
 plugins {
     `java-library`
-    id("com.rohanprabhu.kotlin-dsl-jooq") version "0.4.5"
+    id("com.rohanprabhu.kotlin-dsl-jooq")
 }
 
 dependencies {

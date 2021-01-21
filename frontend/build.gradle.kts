@@ -1,7 +1,7 @@
 plugins {
     application
     java
-    id("com.google.cloud.tools.jib") version "2.5.0"
+    id("com.google.cloud.tools.jib")
 }
 
 base {
@@ -15,8 +15,6 @@ application {
 dependencies {
     implementation(project(":api"))
     implementation(project(":appdb"))
-
-    compileOnly("io.opentelemetry:opentelemetry-exporters-otlp")
 
     implementation("com.amazonaws:aws-xray-recorder-sdk-apache-http")
     implementation("com.amazonaws:aws-xray-recorder-sdk-core")

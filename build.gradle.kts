@@ -2,7 +2,8 @@ import com.github.jk1.license.render.InventoryMarkdownReportRenderer
 
 plugins {
     java
-    id("com.github.jk1.dependency-license-report") version "1.14"
+    id("com.github.ben-manes.versions")
+    id("com.github.jk1.dependency-license-report")
 }
 
 allprojects {

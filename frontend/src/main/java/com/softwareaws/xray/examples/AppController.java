@@ -7,7 +7,7 @@ import com.softwareaws.xray.examples.appdb.tables.pojos.Planet;
 import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import com.softwareaws.xray.examples.hello.HelloServiceOuterClass;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.opentelemetry.trace.TracingContextUtils;
+import io.opentelemetry.api.trace.Span;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Map;
@@ -182,7 +182,7 @@ public class AppController {
         catsCache.sync().set("garfield", "fat");
         dogsCache.sync().set("odie", "funny");
 
-        String traceId = TracingContextUtils.getCurrentSpan().getContext().getTraceIdAsHexString();
+        String traceId = Span.current().getSpanContext().getTraceIdAsHexString();
         return "<html><body>"
                + selfResponseContent + "<br>" + response.getGreeting() + "<br>" + randomPlanet + "<br>" + "Find the traces:<br>"
                + "<a target=\"_blank\" href=\"https://" + AWS_REGION + ".console.aws.amazon.com/xray/home?region=" + AWS_REGION + "#/traces?timeRange=PT1M\">XRay</a>"

@@ -8,9 +8,6 @@ import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.opentelemetry.OpenTelemetry;
-import io.opentelemetry.context.propagation.DefaultContextPropagators;
-import io.opentelemetry.trace.propagation.HttpTraceContext;
 import java.net.URI;
 import javax.servlet.Filter;
 import okhttp3.Call;
@@ -109,12 +106,7 @@ public class Application {
     }
 
     public static void main(String[] args) throws Exception {
-        if (ENABLE_XRAY_SDK) {
-            // Can't use X-Ray propagation with OpenTelemetry if X-Ray SDK is enabled or they would collide.
-            OpenTelemetry.setPropagators(DefaultContextPropagators.builder().addTextMapPropagator(HttpTraceContext.getInstance()).build());
-        } else {
-            AWSXRay.getGlobalRecorder().setContextMissingStrategy(new IgnoreErrorContextMissingStrategy());
-        }
+        AWSXRay.getGlobalRecorder().setContextMissingStrategy(new IgnoreErrorContextMissingStrategy());
         SpringApplication.run(Application.class, args);
     }
 }
