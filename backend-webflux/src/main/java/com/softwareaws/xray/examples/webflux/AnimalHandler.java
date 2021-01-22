@@ -2,6 +2,7 @@ package com.softwareaws.xray.examples.webflux;
 
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
+import io.lettuce.core.tracing.Tracer.Span;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ public class AnimalHandler {
     }
 
     public Mono<ServerResponse> handle(ServerRequest request) {
+        request.headers().asHttpHeaders().forEach((key, value) -> System.out.println(key + "=" + value));
         return Flux.merge(
             catsCache.mget("felix", "hobbes"),
             dogsCache.mget("underdog"))
