@@ -8,8 +8,16 @@ import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.context.Context;
+import java.io.IOException;
 import java.net.URI;
 import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import org.apache.http.client.HttpClient;
@@ -23,6 +31,7 @@ import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @SpringBootApplication
@@ -103,6 +112,18 @@ public class Application {
         }
         return RedisClient.create("redis://" + redisEndpoint)
                           .connect();
+    }
+
+    @Component
+    public static class SpanReturningFilter implements Filter {
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+            HttpServletResponse servletResponse = (HttpServletResponse) response;
+            GlobalOpenTelemetry.getPropagators().getTextMapPropagator()
+                .inject(Context.current(), servletResponse, HttpServletResponse::setHeader);
+            chain.doFilter(request, response);
+        }
     }
 
     public static void main(String[] args) throws Exception {
