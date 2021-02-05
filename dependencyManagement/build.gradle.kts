@@ -10,7 +10,7 @@ val DEPENDENCY_BOMS = listOf(
         "com.amazonaws:aws-xray-recorder-sdk-bom:2.8.0",
         "com.fasterxml.jackson:jackson-bom:2.12.1",
         "io.grpc:grpc-bom:1.35.0",
-        "io.opentelemetry:opentelemetry-bom:0.14.1",
+        "io.opentelemetry:opentelemetry-bom:0.15.0",
         "io.zipkin.brave:brave-bom:5.13.3",
         "io.zipkin.reporter2:zipkin-reporter-bom:2.16.3",
         "org.apache.logging.log4j:log4j-bom:2.14.0",

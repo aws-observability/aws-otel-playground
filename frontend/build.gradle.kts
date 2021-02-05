@@ -20,7 +20,7 @@ dependencies {
     implementation("com.amazonaws:aws-xray-recorder-sdk-core")
     implementation("io.grpc:grpc-netty-shaded")
     implementation("io.lettuce:lettuce-core")
-    implementation("io.opentelemetry:opentelemetry-sdk")
+    implementation("io.opentelemetry:opentelemetry-extension-trace-propagators")
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("mysql:mysql-connector-java")
     implementation("org.apache.httpcomponents:httpclient")

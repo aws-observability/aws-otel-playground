@@ -8,8 +8,8 @@ import com.softwareaws.xray.examples.hello.HelloServiceGrpc;
 import io.grpc.ManagedChannelBuilder;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.context.Context;
+import io.opentelemetry.extension.trace.propagation.AwsXrayPropagator;
 import java.io.IOException;
 import java.net.URI;
 import javax.servlet.Filter;
@@ -120,7 +120,7 @@ public class Application {
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
             HttpServletResponse servletResponse = (HttpServletResponse) response;
-            GlobalOpenTelemetry.getPropagators().getTextMapPropagator()
+            AwsXrayPropagator.getInstance()
                 .inject(Context.current(), servletResponse, HttpServletResponse::setHeader);
             chain.doFilter(request, response);
         }
