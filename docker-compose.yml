@@ -78,12 +78,12 @@ services:
     image: public.ecr.aws/u0d6r4y4/aws-otel-go-test-gorilla:0
     environment:
       - LISTEN_ADDRESS=0.0.0.0:8080
-      - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4317
       - OTEL_RESOURCE_ATTRIBUTES=service.name=go-gorilla
   backend:
     image: public.ecr.aws/o2z1k4j2/aws-otel-playground:backend
     environment:
-      - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4317
     ports:
       - '8081:8081'
       - '8083:8083'
@@ -94,7 +94,7 @@ services:
   backend-webflux:
     image: public.ecr.aws/o2z1k4j2/aws-otel-playground:backend-webflux
     environment:
-      - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4317
       - IMDS_ENDPOINT=imds:1338
       - OTEL_AWS_IMDS_ENDPOINT_OVERRIDE=imds:1338
       - CATS_CACHE_ENDPOINT=cats-cache:6379
@@ -116,7 +116,7 @@ services:
       - SPARK_BACKEND_ENDPOINT=backend:8083
       - GO_GORILLA_BACKEND_ENDPOINT=go-gorilla:8080
       - IMDS_ENDPOINT=imds:1338
-      - OTEL_EXPORTER_OTLP_ENDPOINT=otel:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4317
       - DYNAMODB_ENDPOINT=dynamodb:8000
       - CATS_CACHE_ENDPOINT=cats-cache:6379
       - DOGS_CACHE_ENDPOINT=dogs-cache:6379
