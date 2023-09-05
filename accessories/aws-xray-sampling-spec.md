@@ -5,8 +5,6 @@ To ensure efficient tracing and provide a representative sample of the requests 
 
 ## Workflow
 
-![X-Ray sampling workflow](https://shengxil.s3.amazonaws.com/SamplingWorkflow.png)
-
 In a distributed application, upon a client request arrives, the first traced service (entry service) is responsible for deciding whether the request will be traced or not. The decision will be propagated to all downstream services that participates in this distributed call. 
 
 ## Sampling Rule
